@@ -14,7 +14,7 @@ C=====================================================================
 C$DEBUG: 'D'
 
       include 'files.fi'
-	include 'global.fi'
+      include 'global.fi'
       character*1 temp1,temp2,temp3,temp4
       integer flagcount, endpoint
       logical eof
@@ -167,7 +167,7 @@ c
 C999   return
       stop     
 
-1010  write (*,*) 'Error 1010'	
+1010  write (*,*) 'Error 1010'      
 1020  write (*,*) 'Error 1020'
 1070  write (*,*) 'Error 1070'
 1071  write (*,*) 'Error 1071'
@@ -180,4 +180,3 @@ C1070  call error(70, 999)
 C1071  call error(70, 300)
       end
 
-

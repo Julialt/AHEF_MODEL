@@ -9,7 +9,7 @@ C   incidence
 C=====================================================================
 
       include 'files.fi'
-	include 'global.fi'
+      include 'global.fi'
 c      include 'C:\Documents and Settings\18959\Desktop\AHEF\
 c     +countyAHEF\miniruns\run group 1\global.fi'
       include 'effects.fi'
@@ -17,7 +17,7 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
       logical eof, first, byyear, byage
       integer count,yrlplo,yrlphi,coh1,coh2,iy,iageg
       integer cohyrtmp,colotmp,cohitmp,ilattmp
-	integer rlat
+      integer rlat
       character*12 age_pfn, cohort_pfn, coeff_pfn, popname
       character*12 endpttmp
       character*3  baftype
@@ -26,33 +26,33 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
       real expwgt(maxages*step)
       integer year, poptmp
 c
-	real st_tot_base(15,maxpops)  ! by 15 state, 4 pop
-	real st_tot_scen(15,maxpops)
-	real st_tot_diff(15,maxpops)
-	real st_coh_scen(15,4,maxpops)
-	real st_coh_base(15,4,maxpops)
-	real st_coh_diff(15,4,maxpops)
-	real st_tot_b(15)  ! by 15 state, 4 pop
-	real st_tot_s(15)
-	real st_tot_d(15)
+      real st_tot_base(15,maxpops)  ! by 15 state, 4 pop
+      real st_tot_scen(15,maxpops)
+      real st_tot_diff(15,maxpops)
+      real st_coh_scen(15,4,maxpops)
+      real st_coh_base(15,4,maxpops)
+      real st_coh_diff(15,4,maxpops)
+      real st_tot_b(15)  ! by 15 state, 4 pop
+      real st_tot_s(15)
+      real st_tot_d(15)
 c 
-	real ct_tot_diff_l(numcty), ct_tot_diff_d(numcty)
+      real ct_tot_diff_l(numcty), ct_tot_diff_d(numcty)
 c
-	integer group1(15)
-c	data group1 /1,5,12,22,28,29,40/
-	data group1 /9,10,11,23,24,25,33,34,36,39,42,44,50,51,54/
-	integer ireg  ! total number of states for casest counter
+      integer group1(15)
+c      data group1 /1,5,12,22,28,29,40/
+      data group1 /9,10,11,23,24,25,33,34,36,39,42,44,50,51,54/
+      integer ireg  ! total number of states for casest counter
 c
-	ireg = 15
+      ireg = 15
 c
       count = 1
       cases = 0
       total = 0
-	numreg = 3
+      numreg = 3
       first = .true.
-cc	mrlm - debug
-cc	write(*,*)'debug ',expage(2,3,1)
-	write(*,*)'**************  lats(1) = ',lats(1)
+cc      mrlm - debug
+cc      write(*,*)'debug ',expage(2,3,1)
+      write(*,*)'**************  lats(1) = ',lats(1)
 c
       write (*,1)
 1     format ('+','Running effects model  . . . .')
@@ -64,12 +64,12 @@ c
       open(scratchage, file = xagename)     ! open age exposure file
 
       open(scratchagebl, file = xageblname) ! open baseline age exposure file
-cc	mrlm debug 10/2008
-	write(*,*)'exposure file = ',expname
-	write(*,*)'baseline exposure file = ',expblname
-	write(*,*)'age exposure file =',xagename
-	write(*,*)'baseline age exposure file =',xageblname
-	write(*,*)'effagename = ',effagename
+cc      mrlm debug 10/2008
+      write(*,*)'exposure file = ',expname
+      write(*,*)'baseline exposure file = ',expblname
+      write(*,*)'age exposure file =',xagename
+      write(*,*)'baseline age exposure file =',xageblname
+      write(*,*)'effagename = ',effagename
 
       open(effrun, file = effrunname, status = 'OLD', err = 1080)
       write (errfile,*) 'Reading effects runfile'
@@ -102,7 +102,7 @@ cc	mrlm debug 10/2008
 
       write (*,*) 'Reading population...'
 C MRLM  10/2008 debug
-	write(*,*)' population file is:',popname
+      write(*,*)' population file is:',popname
 
       call read_population(popname)
 
@@ -112,7 +112,7 @@ C MRLM  10/2008 debug
 
 C**  Write population to an output file **
 c
-		write(*,*)'numcty = ',numcty
+            write(*,*)'numcty = ',numcty
 c
       open(o1unit, file='popout.txt')
 
@@ -120,21 +120,21 @@ c
           do ipop = 1, maxpops
             poptmp=0
             do iage=1, maxages
- 	        do icty = 1, numcty
+               do icty = 1, numcty
               poptmp = poptmp + pop(year,iage,icty,ipop)
 c mlrm debug between codes - ---------
-c		if ((icty.eq.1).and.(ipop.eq.1).and.(year.eq.2005)) then
-c		write(99,*)'year,iage,icty,ipop',year,iage,icty,ipop
-c		write(99,*)' pop = ',pop(year,iage,icty,ipop),'  ',poptmp
-c		end if
+c            if ((icty.eq.1).and.(ipop.eq.1).and.(year.eq.2005)) then
+c            write(99,*)'year,iage,icty,ipop',year,iage,icty,ipop
+c            write(99,*)' pop = ',pop(year,iage,icty,ipop),'  ',poptmp
+c            end if
 c--------------------------------------
             end do ! icty
-		 end do ! iage
+             end do ! iage
           write(o1unit,125) year,poptmp
         end do ! ipop
       end do ! year
 c
-cc	write(*,*)'********pop', pop(2005,1,1,1)
+cc      write(*,*)'********pop', pop(2005,1,1,1)
 c
 120   format(t2,a5,t7,i2,t12,a5,t17,i2)
 125   format(t2,i4,t8,i12)
@@ -167,7 +167,7 @@ C=====================================================================
 
         open(iunit, FILE = 'BAF.DAT',Defaultfile=
      +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
-c     +	'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
+c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
         call skip(iunit, eof)
 
         read(iunit, 215) baftype
@@ -200,7 +200,7 @@ C=====================================================================
 
         open (iunit,file='expwgts.dat',Defaultfile=
      +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
-c     +	'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
+c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
 
         call skip (iunit, eof)
 
@@ -229,7 +229,7 @@ C=====================================================================
 
         open(iunit, FILE = 'baseinc.txt',Defaultfile=
      +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
-c     +	'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
+c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
         call skip( iunit, eof )
         read(iunit, 325) colotmp, cohitmp
         call skip( iunit, eof )
@@ -238,8 +238,8 @@ c     +	'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
 
 c        do ilat = 1, numlats
 c        do ipop = 1, maxpops
-		do ilat =1,3
-		do ipop=1,4
+            do ilat =1,3
+            do ipop=1,4
 
           read(iunit, 330) endpttmp
           read(iunit, 332) ilattmp
@@ -333,13 +333,13 @@ C==========================================================================
 C=============================================
 C  Make incidence baseline matrix by age
 C=============================================
-c	mrlm
-c	write(*,*)'numreg = ',numreg
-c	write(*,*)'maxpops = ',maxpops
-c	write(*,*)'maxages = ',maxages
-c	write(*,*)'poplo = ',poplo
-c	write(*,*)'pophi = ',pophi
-c	write(*,*)'step = ',step
+c      mrlm
+c      write(*,*)'numreg = ',numreg
+c      write(*,*)'maxpops = ',maxpops
+c      write(*,*)'maxages = ',maxages
+c      write(*,*)'poplo = ',poplo
+c      write(*,*)'pophi = ',pophi
+c      write(*,*)'step = ',step
 c
 
         do ilat = 1, numreg
@@ -357,13 +357,13 @@ c
                   incage_bl(icohort,iageall,ilat,ipop) =
      +              incid_bl(icohort,iage,ilat,ipop)
 c
-c	if ((ilat.eq.2).and.(iage.eq.12).and.(iageall.eq.56)) then
-c	write(errfile,*)'icohort,iageall,iage,ilat,ipop',icohort,iageall,
+c      if ((ilat.eq.2).and.(iage.eq.12).and.(iageall.eq.56)) then
+c      write(errfile,*)'icohort,iageall,iage,ilat,ipop',icohort,iageall,
 c     +  iage,ilat,ipop,
-c	write(errfile,*)'   incid,  incage_bl=',
-c     +  incid_bl(icohort,iage,ilat,ipop),	
+c      write(errfile,*)'   incid,  incage_bl=',
+c     +  incid_bl(icohort,iage,ilat,ipop),      
 c     + incage_bl(icohort,iageall,ilat,ipop)
-c	end if
+c      end if
 c
                 end do ! iy
 
@@ -379,7 +379,7 @@ C=========================================
 C  Write it to the Errfile (lat and pop=1)
 C=========================================
 c mrlm debug
-cc	write(errfile,*)' ****************************************'
+cc      write(errfile,*)' ****************************************'
 c
         do icohort = colo, cohi
 
@@ -410,7 +410,7 @@ C==================================================================
         caseca=0
         casecab=0
 c
-		do icty = 1,numcty
+            do icty = 1,numcty
 
           do ipop = 1, maxpops
 
@@ -422,34 +422,34 @@ c
 
                 expscen = 0.0
 cc
-c			i get the iagey, i would think iy loop comes into play
-c			 if iagey = 1,maxages (without the step) but the iy represent
-c			 the stepping through <-- question - incid_bl which is by 5 years
-c			 however, here, is incage_bl which is by each year...
+c                  i get the iagey, i would think iy loop comes into play
+c                   if iagey = 1,maxages (without the step) but the iy represent
+c                   the stepping through <-- question - incid_bl which is by 5 years
+c                   however, here, is incage_bl which is by each year...
 c
                 do iagey = 1, maxages * step
 c
-c			 so this is for going through the 5 years around the icohort*step 
-c			 so colo_year = 1890, icohort = 1:43, step = 5, iagey = 1,90, iy=5 steps
-c			 maxages = 18
+c                   so this is for going through the 5 years around the icohort*step 
+c                   so colo_year = 1890, icohort = 1:43, step = 5, iagey = 1,90, iy=5 steps
+c                   maxages = 18
 
        iyear = colo_year + (icohort-1)*step - int(step/2) + iagey - 1
      +          + iy
 
                 itmp = iagey + iy
 
-cc			mrlm comment - expage(icohort,itmp,ilat) - how much exposure a person gets
-c			living at that location given when you are born and how old you are now
-c			 - i.e. ilat = 1 (so you live at 50 degrees North)
-c			   itmp = 50 so you are 50 years old
-c			   icohort = 20 so you were born in 1890+20*5 = 1990
-c			   so this is equivalent to 2040 (born in 1990 + 50 years old)
+cc                  mrlm comment - expage(icohort,itmp,ilat) - how much exposure a person gets
+c                  living at that location given when you are born and how old you are now
+c                   - i.e. ilat = 1 (so you live at 50 degrees North)
+c                     itmp = 50 so you are 50 years old
+c                     icohort = 20 so you were born in 1890+20*5 = 1990
+c                     so this is equivalent to 2040 (born in 1990 + 50 years old)
 c---------
-c			so this next part then for a given latitude, type of population, and
-c			for each birth year (icohort), it then sums up the lifetime of exposure
-c			weighted by the amount of exposure respective to that age (i.e. younger
-c			ages tend to get more exposure than the older ages)
-c			 = ends up with total lifetime exposure for a person born in icohort year
+c                  so this next part then for a given latitude, type of population, and
+c                  for each birth year (icohort), it then sums up the lifetime of exposure
+c                  weighted by the amount of exposure respective to that age (i.e. younger
+c                  ages tend to get more exposure than the older ages)
+c                   = ends up with total lifetime exposure for a person born in icohort year
 c
                 expbase = expbase*cmflag + expagebl(icohort,itmp,icty)
      +                    * expwgt(iagey)
@@ -457,14 +457,14 @@ c
                 expscen = expscen*cmflag + expage(icohort,itmp,icty)
      +                    * expwgt(iagey)
 c mrlm
-c	if (((icohort.eq.20).or.(icohort.eq.40)).and.
-c     +	((iagey.eq.20).or.(iagey.eq.40))) then
-c		write(91,*)'icty,ipop,icohort,iy,iagey = ',icty,ipop,icohort,iy,
-c     +		iagey
-c		write(91,*)'exbl,exage,expwgt,cmflag=',
-c     +		expagebl(icohort,itmp,icty),expage(icohort,itmp,icty),
+c      if (((icohort.eq.20).or.(icohort.eq.40)).and.
+c     +      ((iagey.eq.20).or.(iagey.eq.40))) then
+c            write(91,*)'icty,ipop,icohort,iy,iagey = ',icty,ipop,icohort,iy,
+c     +            iagey
+c            write(91,*)'exbl,exage,expwgt,cmflag=',
+c     +            expagebl(icohort,itmp,icty),expage(icohort,itmp,icty),
 c     +        expwgt(iagey),cmflag
-c	end if
+c      end if
 c
                 iage = int(iagey/step) + 1
 
@@ -476,23 +476,23 @@ c
 
 cc-----------------------
 cNEW - determine latitude to use
-			 do imatch = 1,numcty
-				ictymatch = cty(imatch)
-				do imatch2 = 1,numcty
-				    if (ictymatch.eq.(cty_fip(imatch2))) then
-						rlat = aint(cty_lat(imatch2))
-						goto 801
-					end if
-				end do
-			end do
+                   do imatch = 1,numcty
+                        ictymatch = cty(imatch)
+                        do imatch2 = 1,numcty
+                            if (ictymatch.eq.(cty_fip(imatch2))) then
+                                    rlat = aint(cty_lat(imatch2))
+                                    goto 801
+                              end if
+                        end do
+                  end do
 c
- 801			if ((rlat.ge.20).and.(rlat.le.30)) then
-				ilat = 3
-			elseif ((rlat.ge.30).and.(rlat.le.40)) then
-				ilat = 2
-			elseif ((rlat.ge.40).and.(rlat.le.50)) then
-				ilat = 1
-			end if	  
+ 801                  if ((rlat.ge.20).and.(rlat.le.30)) then
+                        ilat = 3
+                  elseif ((rlat.ge.30).and.(rlat.le.40)) then
+                        ilat = 2
+                  elseif ((rlat.ge.40).and.(rlat.le.50)) then
+                        ilat = 1
+                  end if        
 c
                 casecab(icohort, itmp, icty, ipop) =
      +          casecab(icohort, itmp, icty, ipop) +
@@ -541,46 +541,46 @@ c
 C----------------------------------------------------------------------
 c  MRLM for testing print out to make graphs of a 10 year old thread
 c-----------
-c	open(21,file="pop_10.txt",status="unknown")
-c	open(22,file="scbs_exp_10.txt",status="unknown")
-c	open(24,file="bsince_10.txt",status="unknown")
-c	open(25,file="case_10.txt",status="unknown")
+c      open(21,file="pop_10.txt",status="unknown")
+c      open(22,file="scbs_exp_10.txt",status="unknown")
+c      open(24,file="bsince_10.txt",status="unknown")
+c      open(25,file="case_10.txt",status="unknown")
 c
-c	icty = 1
-c	ilat = 2
-c	ipop = 1
+c      icty = 1
+c      ilat = 2
+c      ipop = 1
 c
-c	write(21,*)endpttmp
-c	write(22,*)endpttmp
-c	write(24,*)endpttmp
-c	write(25,*)endpttmp
+c      write(21,*)endpttmp
+c      write(22,*)endpttmp
+c      write(24,*)endpttmp
+c      write(25,*)endpttmp
 c
-cc	write(*,*)'IS IT 5-32?',incage_bl(1,56,2,1)
+cc      write(*,*)'IS IT 5-32?',incage_bl(1,56,2,1)
 c
-c	do icohort = colo,cohi
+c      do icohort = colo,cohi
 c
-c	iyear = colo_year + (icohort-1)*step - int(step/2) + 10 - 1
-c	iyear = colo_year + (icohort-1)*step 
-cc	write(*,*)'icohort, iyear =',icohort,iyear
+c      iyear = colo_year + (icohort-1)*step - int(step/2) + 10 - 1
+c      iyear = colo_year + (icohort-1)*step 
+cc      write(*,*)'icohort, iyear =',icohort,iyear
 c
-c	  write(21,111)colo_year+(icohort-1)*step,
-c     +	  pop(min(max(iyear, poplo), pophi),3, 
-c     +	  icty, ipop)
-c	 write(22,121)colo_year+(icohort-1)*step,
-c     +  	  expagebl(icohort,10,icty),
+c        write(21,111)colo_year+(icohort-1)*step,
+c     +        pop(min(max(iyear, poplo), pophi),3, 
+c     +        icty, ipop)
+c       write(22,121)colo_year+(icohort-1)*step,
+c     +          expagebl(icohort,10,icty),
 c     +      expage(icohort,10,icty)
-c	 write(24,*)colo_year+(icohort-1)*step,
-c     +	 incage_bl(icohort,10,ilat,ipop),
+c       write(24,*)colo_year+(icohort-1)*step,
+c     +       incage_bl(icohort,10,ilat,ipop),
 c     +     icohort,ilat,ipop
-c	 write(25,141)colo_year+(icohort-1)*step,
-c     +	  casecab(icohort,10,icty,ipop),
-c     +	  caseca(icohort,10,icty,ipop)
-c	end do
+c       write(25,141)colo_year+(icohort-1)*step,
+c     +        casecab(icohort,10,icty,ipop),
+c     +        caseca(icohort,10,icty,ipop)
+c      end do
 c
-c111	format(I4,2x,I10)
-c121	format(I4,2x,2(f10.4,2x))
-c131	format(I4,2x,f10.7)
-c141	format(I4,2x,2(f10.7,2x))
+c111      format(I4,2x,I10)
+c121      format(I4,2x,2(f10.4,2x))
+c131      format(I4,2x,f10.7)
+c141      format(I4,2x,2(f10.7,2x))
 C
 C=====================================================================
 C  Writes Scenario Inc/Mort by cohort, ilat, and ipop over cohort time
@@ -588,11 +588,11 @@ C=====================================================================
 
       if (first) then
         open(ounit, file='eachpop_state1.txt')
-	  open(ounit21, file='sumpop_state1.txt')
+        open(ounit21, file='sumpop_state1.txt')
       else
         open(ounit, file='eachpop_state1.txt', status = 'OLD',
      +       access = 'APPEND')
-	  open(ounit21, file='sumpop_state1.txt',status='OlD',
+        open(ounit21, file='sumpop_state1.txt',status='OlD',
      +        access='APPEND')
       endif
 c
@@ -602,96 +602,96 @@ c
       write(ounit21, 700) 'Measure:   >',endpttmp,'<'
       write(ounit21, 700) 'D-RType:   >',drtmp,'<'
 c
-	do ipop=1,maxpops
-	  do ii=1,ireg               
-		st_tot_scen(ii,ipop)=0.0
-		st_tot_base(ii,ipop)=0.0
-		st_tot_diff(ii,ipop)=0.0
-		st_tot_s(ii)=0.0
-		st_tot_b(ii)=0.0
-		st_tot_d(ii)=0.0
-	  end do
-	end do
+      do ipop=1,maxpops
+        do ii=1,ireg               
+            st_tot_scen(ii,ipop)=0.0
+            st_tot_base(ii,ipop)=0.0
+            st_tot_diff(ii,ipop)=0.0
+            st_tot_s(ii)=0.0
+            st_tot_b(ii)=0.0
+            st_tot_d(ii)=0.0
+        end do
+      end do
 
           do ipop=1, maxpops
 
-			do icty = 1,numcty
+                  do icty = 1,numcty
 
-			     icomp = int(cty_fip(icty)/1000)
+                       icomp = int(cty_fip(icty)/1000)
 c
-		     do ii=1, ireg
-		     if (icomp.eq.group1(ii)) then
-c			    icg1=icg1 + 1
+                 do ii=1, ireg
+                 if (icomp.eq.group1(ii)) then
+c                      icg1=icg1 + 1
 
-				do icohort = colo,cohi
-				 do iagey=1,maxages*step +4
+                        do icohort = colo,cohi
+                         do iagey=1,maxages*step +4
 
-			     st_tot_scen(ii,ipop)= caseca(icohort,iagey,icty,ipop) +
+                       st_tot_scen(ii,ipop)= caseca(icohort,iagey,icty,ipop) +
      +              st_tot_scen(ii,ipop)
-		         st_tot_base(ii,ipop)=casecab(icohort,iagey,icty,ipop) +
-     +	              st_tot_base(ii,ipop)
-			      st_tot_diff(ii,ipop)=caseca(icohort,iagey,icty,ipop) -
+                     st_tot_base(ii,ipop)=casecab(icohort,iagey,icty,ipop) +
+     +                    st_tot_base(ii,ipop)
+                        st_tot_diff(ii,ipop)=caseca(icohort,iagey,icty,ipop) -
      +               casecab(icohort,iagey,icty,ipop) + 
      +               st_tot_diff(ii,ipop)
 c
-c		if ((cty_fip(icty).eq.11001).and.(ipop.eq.1)) then
-c		 if (caseca(icohort,iagey,icty,ipop).ne.0) then
-c	  write(911,*)iagey,caseca(icohort,iagey,icty,ipop),
+c            if ((cty_fip(icty).eq.11001).and.(ipop.eq.1)) then
+c             if (caseca(icohort,iagey,icty,ipop).ne.0) then
+c        write(911,*)iagey,caseca(icohort,iagey,icty,ipop),
 c     +    casecab(icohort,iagey,icty,ipop) 
-c		 end if
-c	    end if
-				end do
-			    end do
+c             end if
+c          end if
+                        end do
+                      end do
 
-			 end if
-			 end do ! ii
+                   end if
+                   end do ! ii
 c
-c	if ((cty_fip(icty).eq.11001).and.(ipop.eq.1)) then
-c		write(911,*)'icohort,iagey=',icohort,' ',iagey,
-c     +		 caseca(icohort,iagey,icty,ipop),
+c      if ((cty_fip(icty).eq.11001).and.(ipop.eq.1)) then
+c            write(911,*)'icohort,iagey=',icohort,' ',iagey,
+c     +             caseca(icohort,iagey,icty,ipop),
 c     +        st_tot_scen(ii,ipop), casecab(icohort,iagey,icty,ipop),
-c     +	    st_tot_base(ii,ipop),caseca(icohort,iagey,icty,ipop) -
+c     +          st_tot_base(ii,ipop),caseca(icohort,iagey,icty,ipop) -
 c     +               casecab(icohort,iagey,icty,ipop),
 c     +               st_tot_diff(ii,ipop)
-c	end if
+c      end if
 c
            end do ! icty
 c
-	if (ipop.eq.1) then
-c	 if (st_tot_base(10,ipop).eq.(0.0)) then
-c	write(671,*)' here'
-c	else
-c	write(911,*)'FINAL =',st_tot_base(10,ipop),st_tot_scen(10,ipop),
+      if (ipop.eq.1) then
+c       if (st_tot_base(10,ipop).eq.(0.0)) then
+c      write(671,*)' here'
+c      else
+c      write(911,*)'FINAL =',st_tot_base(10,ipop),st_tot_scen(10,ipop),
 c     +    st_tot_diff(10,ipop)
-c	 end if
-	end if
+c       end if
+      end if
 c
       end do ! ipop
 
 c
-c	write(*,*)' summing up for state: total counties = ',icg1
+c      write(*,*)' summing up for state: total counties = ',icg1
 c             
-	  do ipop=1,maxpops
- 	    write(ounit,*)'Population =',ipop
-		do ii=1,ireg
-		 write(ounit,*)group1(ii),st_tot_base(ii,ipop),
+        do ipop=1,maxpops
+           write(ounit,*)'Population =',ipop
+            do ii=1,ireg
+             write(ounit,*)group1(ii),st_tot_base(ii,ipop),
      +       st_tot_scen(ii,ipop),st_tot_diff(ii,ipop)
            end do ! ii
-	  end do !ipop
+        end do !ipop
 
         close(ounit)
 c
 c add up for all populations
-	 do ii=1,ireg
-	  do ipop=1,maxpops
-		st_tot_b(ii) = st_tot_base(ii,ipop)+st_tot_b(ii)
-		st_tot_s(ii) = st_tot_scen(ii,ipop)+st_tot_s(ii)
-		st_tot_d(ii) = st_tot_diff(ii,ipop)+st_tot_d(ii)
-	  end do
-	 end do
-c 	    write(ounit21,*)'Population =',ipop
-	  do ii=1,ireg
-		 write(ounit21,*)group1(ii),st_tot_b(ii),
+       do ii=1,ireg
+        do ipop=1,maxpops
+            st_tot_b(ii) = st_tot_base(ii,ipop)+st_tot_b(ii)
+            st_tot_s(ii) = st_tot_scen(ii,ipop)+st_tot_s(ii)
+            st_tot_d(ii) = st_tot_diff(ii,ipop)+st_tot_d(ii)
+        end do
+       end do
+c           write(ounit21,*)'Population =',ipop
+        do ii=1,ireg
+             write(ounit21,*)group1(ii),st_tot_b(ii),
      +       st_tot_s(ii),st_tot_d(ii)
         end do ! ii
 
@@ -700,7 +700,7 @@ c 	    write(ounit21,*)'Population =',ipop
 c
 c---------------------------------------------------------------------
 c  write out by population by state summed up for cohort groups
-c	1890-1980; 1985-2010; 2015-2050; 2055-2100
+c      1890-1980; 1985-2010; 2015-2050; 2055-2100
 c
       if (first) then
         open(ounit31, file='eachpop_state_cohort1.txt')
@@ -711,76 +711,76 @@ c
 c
       write(ounit, 700) 'Measure:   >',endpttmp,'<'
       write(ounit, 700) 'D-RType:   >',drtmp,'<'
-c	
-	do ii = 1,ireg
-	  do ic = 1,4
-	    do ipop = 1,maxpops
-  		   st_coh_scen(ii,ic,ipop)=0.0
-		end do
-	  end do
-	end do
+c      
+      do ii = 1,ireg
+        do ic = 1,4
+          do ipop = 1,maxpops
+                 st_coh_scen(ii,ic,ipop)=0.0
+            end do
+        end do
+      end do
 c
          do ipop=1, maxpops
 
-			do icty = 1,numcty
+                  do icty = 1,numcty
 
-			     icomp = int(cty_fip(icty)/1000)
+                       icomp = int(cty_fip(icty)/1000)
 c
-		     do ii=1, ireg
-		     if (icomp.eq.group1(ii)) then
-c			    icg1=icg1 + 1
+                 do ii=1, ireg
+                 if (icomp.eq.group1(ii)) then
+c                      icg1=icg1 + 1
 
-				do icohort = colo,cohi
+                        do icohort = colo,cohi
 c
-				  iyear = 1890+ (icohort-1)*5
-				  if (iyear.le.1980) then   ! 1890 - 1980
-						ic=1 
-				  elseif (iyear.le.2010) then    ! 1985-2010
-						ic =2
-	              elseif (iyear.le.2050) then    ! 2015-2050
-					    ic = 3
-	              elseif (iyear.le.2100) then    ! 2055-2100
-	                     ic = 4
-	              else
-					write(*,*)' ERROR in WRITING OUT line 704'
-	              end if
+                          iyear = 1890+ (icohort-1)*5
+                          if (iyear.le.1980) then   ! 1890 - 1980
+                                    ic=1 
+                          elseif (iyear.le.2010) then    ! 1985-2010
+                                    ic =2
+                    elseif (iyear.le.2050) then    ! 2015-2050
+                                  ic = 3
+                    elseif (iyear.le.2100) then    ! 2055-2100
+                           ic = 4
+                    else
+                              write(*,*)' ERROR in WRITING OUT line 704'
+                    end if
 c
-				 do iagey=1,maxages*step +4
+                         do iagey=1,maxages*step +4
 
-			     st_coh_scen(ii,ic,ipop)= caseca(icohort,iagey,icty,ipop) +
+                       st_coh_scen(ii,ic,ipop)= caseca(icohort,iagey,icty,ipop) +
      +              st_coh_scen(ii,ic,ipop)
-		         st_coh_base(ii,ic,ipop)=casecab(icohort,iagey,icty,ipop) +
-     +	              st_coh_base(ii,ic,ipop)
-			      st_coh_diff(ii,ic,ipop)=caseca(icohort,iagey,icty,ipop) -
+                     st_coh_base(ii,ic,ipop)=casecab(icohort,iagey,icty,ipop) +
+     +                    st_coh_base(ii,ic,ipop)
+                        st_coh_diff(ii,ic,ipop)=caseca(icohort,iagey,icty,ipop) -
      +               casecab(icohort,iagey,icty,ipop) + 
      +               st_coh_diff(ii,ic,ipop)
 c
-				end do  ! iagey
-			    end do  ! icohort
+                        end do  ! iagey
+                      end do  ! icohort
 
-			 end if  ! icomp
-			 end do ! ii
+                   end if  ! icomp
+                   end do ! ii
 c
            end do ! icty
 c
-      end do ! ipop	
+      end do ! ipop      
 c
-	 do ic = 1,4  ! 4 cohort groups
-	  do ipop=1,maxpops   ! 6 population types
- 	    write(ounit31,*)'Population =',ipop
-		write(ounit31,*)'Cohort group = ',ic
-		do ii=1,ireg
-		 write(ounit31,*)group1(ii),st_coh_base(ii,ic,ipop),
+       do ic = 1,4  ! 4 cohort groups
+        do ipop=1,maxpops   ! 6 population types
+           write(ounit31,*)'Population =',ipop
+            write(ounit31,*)'Cohort group = ',ic
+            do ii=1,ireg
+             write(ounit31,*)group1(ii),st_coh_base(ii,ic,ipop),
      +       st_coh_scen(ii,ic,ipop),st_coh_diff(ii,ic,ipop)
            end do ! ii
-	  end do !ipop
-	end do
+        end do !ipop
+      end do
 c
         close(ounit31)
 c
 
 c        do ipop=1, maxpops
-c		do icty=1,numcty
+c            do icty=1,numcty
 
 c      write(ounit, 710) ipop, icty
 c
@@ -789,7 +789,7 @@ C DECOMMENT THE FOLLOWING FOR DETAILED COHORT-TIME SCENARIO MATRIX
 c               do icohort=colo,cohi
 
 c                    write(ounit, 604) icohort,
-c     +				  (colo_year+(icohort-1)*step),
+c     +                          (colo_year+(icohort-1)*step),
 c     +                  (caseca(icohort,
 c     +                  iagey, icty, ipop), iagey=1,maxages * step+4)
 c               end do ! icohort
@@ -805,63 +805,63 @@ c-------------------------------------------------------------------
 c by county
 c------------------------------------------------------------------
       if (first) then
-	  open(ounit441, file='sum_cty1.txt')
+        open(ounit441, file='sum_cty1.txt')
       else
         open(ounit441, file='sum_cty1.txt', status = 'OLD',
      +       access = 'APPEND')
-	endif
+      endif
 c
-	do icty=1,numcty
+      do icty=1,numcty
             
-		ct_tot_diff_l(icty)=0.0
-		ct_tot_diff_d(icty)=0.0
+            ct_tot_diff_l(icty)=0.0
+            ct_tot_diff_d(icty)=0.0
 
-	end do
+      end do
 
          do icty=1, numcty
-			     icomp = int(cty_fip(icty)/1000)
+                       icomp = int(cty_fip(icty)/1000)
 c
-		     do ii=1, ireg
-		      if (icomp.eq.group1(ii)) then
+                 do ii=1, ireg
+                  if (icomp.eq.group1(ii)) then
 c
-				do icohort = colo,cohi
-				 do iagey=1,maxages*step +4
-		 	          do ipop = 1,maxpops
+                        do icohort = colo,cohi
+                         do iagey=1,maxages*step +4
+                             do ipop = 1,maxpops
 c
-			if ((ipop.eq.1).or.(ipop.eq.2)) then  ! light skinned
-			     ct_tot_diff_l(icty)= caseca(icohort,iagey,icty,ipop) -
+                  if ((ipop.eq.1).or.(ipop.eq.2)) then  ! light skinned
+                       ct_tot_diff_l(icty)= caseca(icohort,iagey,icty,ipop) -
      +               casecab(icohort,iagey,icty,ipop) + 
      +              ct_tot_diff_l(icty)
-c	
-		     end if			! dark skinned
-			if ((ipop.eq.3).or.(ipop.eq.4)) then  !
+c      
+                 end if                  ! dark skinned
+                  if ((ipop.eq.3).or.(ipop.eq.4)) then  !
 c
-cc	if ((icomp.eq.10).and.(ipop.eq.3)) then
-cc		write(*,*)'ipop =',icty,ipop,caseca(icohort,iagey,icty,ipop)
-cc	end if
+cc      if ((icomp.eq.10).and.(ipop.eq.3)) then
+cc            write(*,*)'ipop =',icty,ipop,caseca(icohort,iagey,icty,ipop)
+cc      end if
 c
-		         ct_tot_diff_d(icty)=caseca(icohort,iagey,icty,ipop) -
+                     ct_tot_diff_d(icty)=caseca(icohort,iagey,icty,ipop) -
      +               casecab(icohort,iagey,icty,ipop) + 
-     +	              ct_tot_diff_d(icty)
-			end if
+     +                    ct_tot_diff_d(icty)
+                  end if
 
-				end do
-			    end do
-				end do
+                        end do
+                      end do
+                        end do
 
-			 end if
-			 end do ! ii
-		end do
+                   end if
+                   end do ! ii
+            end do
 c
-		do icty = 1,numcty
-		write(ounit441,*)icty,cty_fip(icty),
+            do icty = 1,numcty
+            write(ounit441,*)icty,cty_fip(icty),
      +   ct_tot_diff_l(icty),ct_tot_diff_d(icty),
      +  ct_tot_diff_l(icty)+ct_tot_diff_d(icty)
-		
-	end do
+            
+      end do
 c
         close(ounit441)
-		
+            
 
 C=====================================================================
 C  Writes Baseline Inc/Most by cohort, ilat, and ipop over cohort time
@@ -881,7 +881,7 @@ c      write(ounit, 700) 'D-RType:   >',drtmp,'<'
 
 c        do ipop=1, maxpops
 
-c		do icty = 1,numcty
+c            do icty = 1,numcty
 
 c      write(ounit, 710) ipop, icty
 710   format(i3,3x,i3)
@@ -891,7 +891,7 @@ C DECOMMENT THE FOLLOWING FOR DETAILED COHORT-TIME BASELINE MATRIX
 c               do icohort=colo,cohi
 c                    write(ounit, 603) icohort
 c                    write(ounit, 604) icohort,
-c     +				  (colo_year+(icohort-1)*step),
+c     +                          (colo_year+(icohort-1)*step),
 c     +                  (casecab(icohort,
 c     +                  iagey, icty, ipop), iagey=1,maxages * step+4)
 c               end do ! icohort
@@ -918,7 +918,7 @@ c      write(ounit, 700) 'D-RType:   >',drtmp,'<'
 
 c        do ipop=1, maxpops
 
-c		do icty = 1,numcty
+c            do icty = 1,numcty
 
 c      write(ounit, 710) ipop, ilat
 
@@ -939,8 +939,8 @@ c        close(ounit)
 C=====================================================================
 C  Calculates and Writes Total Cases by cohort, ilat, ipop
 C=====================================================================
-	iwrite=0
-	if (iwrite.eq.1) then  ! write out the following files
+      iwrite=0
+      if (iwrite.eq.1) then  ! write out the following files
 
       if (first) then
         open(ounit, file='tcolp.txt')
@@ -952,11 +952,11 @@ C=====================================================================
       write(ounit, 700) 'Measure:   >',endpttmp,'<'
       write(ounit, 700) 'D-RType:   >',drtmp,'<'
 
-cc	write(*,*)'colo_year =',colo_year
+cc      write(*,*)'colo_year =',colo_year
 cc
         do ipop=1, maxpops
 
-		do icty = 1,numcty
+            do icty = 1,numcty
 
           write(ounit, 710) ipop, icty
 
@@ -984,7 +984,7 @@ cc
 
         close(ounit)
 
-	end if ! writing out files
+      end if ! writing out files
 C=================================================================
 C  Calculates and Writes Totals by cohort for all ipops and ilats
 C=================================================================
@@ -1006,7 +1006,7 @@ C=================================================================
 
           do ipop=1, maxpops
 
-		  do icty = 1,numcty
+              do icty = 1,numcty
               do iagey = 1, maxages * step + 4
 
               tca = tca + caseca(icohort, iagey, icty, ipop)
@@ -1047,4 +1047,3 @@ cxc      call write_effects
 1080  call error(80, *999)
       end
 
-
