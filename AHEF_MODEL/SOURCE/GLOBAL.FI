@@ -1,0 +1,60 @@
+C=====================================================================
+C     GLOBAL.FI
+C=====================================================================
+C  Definition of GLOBAL common blocks
+C=====================================================================
+
+      integer minyear, maxyear, maxlats, maxage, step
+      integer maxcohorts, maxpops, maxeps, lcols, lrows, topage
+	integer numcty, maxages
+c	integer maxcty, numcty
+
+      parameter (  minyear    =  1930,
+     +             maxyear    =  2150,
+     +             maxlats    =     5,             ! 
+c     +			 maxcty		=   524,			 ! FOR GROUP 1
+c     +             numcty     =  3111,			 ! continental US
+     +             numcty     =   522,			 ! for testing - memory prob!
+     +             maxage     =    85,             ! maximum age cohort
+     +             step       =     5,             ! step in cohort ages
+     +             maxages    =     maxage/step+1, ! number of ages
+     +             maxcohorts =    50,
+c     +             maxpops    =     6,             ! WM,WF,BM,BF,NWM,NWF
+     +				maxpops = 4,
+c													problem with baseline at 4
+     +             maxeps     =    10,             ! max end points
+     +             lcols      =    21,             ! lookup table columns
+     +             lrows      =    51,             ! lookup table rows
+     +             topage     =    90 )            ! New def maxage
+
+      character*3 monthname(12)
+
+      integer runcount
+      integer startyr, endyr, maxyr, numlats
+      integer iyear, imonth, iday, ilat
+      integer icohort, iage, ipop, iagey
+      integer mincohort,maxcohort
+
+      logical emiflag, oznflag, expflag, effflag
+      logical errflag, returned
+      character*12 eminame, oznname, expname, expblname, effname
+      character*12 xageblname, xagename, effagename
+      character*12 atmrunname, exprunname, effrunname
+      character*12 drtype
+cMRLM added
+	integer cty_fip(numcty)  ! fip number for each US county
+	real cty_lat(numcty)   ! associated lat for each US county
+c
+      common /global/ monthname, runcount
+      common /global/ startyr, endyr, maxyr, numlats
+c MRLM added for county - no reading in so placed above
+	common /global/ cty_fip, cty_lat
+c
+      common /global/ iyear, imonth, iday, ilat, iagey
+      common /global/ icohort, iage, ipop, mincohort, maxcohort
+      common /global/ emiflag, oznflag, expflag, effflag
+      common /global/ errflag, returned
+      common /global/ eminame, oznname, expname, expblname, effname
+      common /global/ xageblname, xagename, effagename
+      common /global/ atmrunname, exprunname, effrunname
+

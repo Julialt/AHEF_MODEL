@@ -1,0 +1,34 @@
+C=====================================================================
+C     EXPOSURE.FI
+C=====================================================================
+C  Definition of common blocks for EXPOSURE MODULE
+C=====================================================================
+
+      integer minmon, maxmon, yrhi, yrlo
+      integer measures, colo, cohi, colo_year, cohi_year
+
+      real lats(maxlats)
+      real dobson(minyear:maxyear,12,maxlats)
+      real lookup(lrows,lcols)
+c      real yearlyirrad(minyear:maxyear,maxcty)
+	real yearlyirrad(minyear:maxyear,numcty)
+      real weights(maxages,maxages)
+C     real expos_out(maxcohorts, maxages, maxlats)
+C     real expos_outbl(maxcohorts, maxages, maxlats)
+c
+c      real expos_age(maxcohorts, topage+4, maxcty)
+c      real expos_agebl(maxcohorts, topage+4, maxcty)
+	real expos_age(maxcohorts, topage+4, numcty)
+	real expos_agebl(maxcohorts, topage+4, numcty)
+
+      logical expblflag
+
+      common /expos/ minmon, maxmon, measures
+      common /expos/ lats, dobson, yrhi, yrlo
+      common /expos/ lookup, yearlyirrad, weights
+C     common /expos/ expos_out, expos_outbl
+      common /expos/ expos_age, expos_agebl
+      common /expos/ colo, cohi, colo_year, cohi_year
+      common /expos/ expblflag
+
+

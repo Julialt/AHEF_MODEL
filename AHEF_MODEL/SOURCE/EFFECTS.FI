@@ -1,0 +1,49 @@
+C=====================================================================
+C     EFFECTS.FI
+C=====================================================================
+C  Definition of common blocks for EFFECTS MODULE
+C=====================================================================
+c changes all maxcty to numcty for memory!
+      real lats(maxlats)
+C     real expos (maxcohorts, maxages, maxlats)
+C     real exposbl (maxcohorts, maxages, maxlats)
+      real expage (maxcohorts, topage+4, numcty)
+      real expagebl (maxcohorts, topage+4, numcty)
+      real coeff (maxpops,5)
+      real cohort_risk(maxcohorts)
+      real age_coeffs(maxages)
+C     real incid (maxcohorts, maxages, maxlats, maxpops)
+C     real incid2 (maxcohorts, maxages, maxlats, maxpops)
+      real incid_bl (maxcohorts, maxages, maxlats, maxpops)
+      real incage_bl (maxcohorts, topage, maxlats, maxpops)
+C     real incage2 (maxcohorts, topage, maxlats, maxpops)
+      integer pop (minyear:maxyear, maxages, numcty, maxpops)
+      real casesa (2100+topage+4-1887, numcty, maxpops)
+      real caseca (maxcohorts, topage+4, numcty, maxpops)
+      real casesab (2100+topage+4-1887, numcty, maxpops)
+      real casecab (maxcohorts, topage+4, numcty, maxpops)
+C     real cases (minyear:maxyear, maxages, maxlats, maxpops)
+      real total (minyear:maxyear, maxeps)
+      real baf (maxpops)
+      character*12 endpoint, index
+      character*12 agename, cohortname, coeffname, popseg
+      integer numreg, colo, cohi, colo_year, cohi_year
+      integer poplo, pophi, outputlo, outputhi
+      integer popmaxyr, popminyr, yrstep
+c
+	integer cty(numcty)
+	common /effect/ cty
+      common /effect/ lats, incid_bl
+      common /effect/ expage, expagebl, incage2, incage_bl
+      common /effect/ pop, coeff, total, age_coeffs
+C     common /effect/ expos, exposbl, incid, incid2, cases
+      common /effect/ casesa, caseca, casecab, casesab
+      common /effect/ cohort_risk, baf
+      common /effect/ endpoint, index, agename, cohortname, coeffname
+      common /effect/ popseg
+      common /effect/ numreg, colo, cohi, colo_year, cohi_year
+      common /effect/ poplo, pophi, outputlo, outputhi
+      common /effect/ popmaxyr, popminyr, yrstep
+
+
+

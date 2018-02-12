@@ -1,0 +1,22 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: CLBR55RG - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "link.exe kernel32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/CLBR55RG.pdb" /debug /machine:I386 /out:"Debug/CLBR55RG.exe" /pdbtype:sept  ".\Debug\CLBR55RG.OBJ" ".\Debug\CLBR55RGv2.obj" "
+<h3>Output Window</h3>
+Linking...
+CLBR55RGv2.obj : error LNK2005: _MAIN__ already defined in CLBR55RG.OBJ
+Debug/CLBR55RG.exe : fatal error LNK1169: one or more multiply defined symbols found
+Error executing link.exe.
+
+
+
+<h3>Results</h3>
+CLBR55RG.exe - 2 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
