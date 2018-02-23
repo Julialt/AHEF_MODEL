@@ -1,0 +1,28 @@
+*========================================================================
+*  AHEF.RUN
+*  Master Runfile for Atmospheric and Health Effects Framework
+*========================================================================
+*
+*                        Data file extensions:
+*                        ===   ===   ===   ===
+                         EMI   OZN   EXP   EFF
+*                        ===   ===   ===   ===      Run File Extensions:
+*   INPUT      OUTPUT
+*  FILENAME   FILENAME   Read/Write Data File?   ATM_RUN  EXP_RUN  EFF_RUN
+*  ========   ========   >=<   >=<   >=<   >=<     ===      ===      ===
+*  CALIBRAT                     X     X            STD      CAL      STD
+*   NOCNTL     RUN_TEST          X     X     X      STD      STD      STD
+*   MP1987     RUN_TEST          X     X     X      STD      STD      STD
+*   MA98O2     RUN_TEST          X     X     X      STD      STD      STD
+*   MPAMEN     RUN_TEST          X     X     X      STD      STD      STD
+*   MP2007     RUN_TEST          X     X     X      STD      STD      STD
+*   EP1NvB     RUN_TEST          X     X     X      STD      STD      STD
+   WMONOC     RUN_TEST          X     X     X      STD      STD      STD
+*   WMOA1C     RUN_TEST          X     X     X      STD      STD      STD
+*   WMOMPC     RUN_TEST          X     X     X      STD      STD      STD
+*   WMO_NP     RUN_TEST          X     X     X      STD      STD      STD
+*   WMO_A1     RUN_TEST          X     X     X      STD      STD      STD
+*   WMO_BL     RUN_TEST          X     X     X      STD      STD      STD 
+* 
+*  ========   ========   >=<   >=<   >=<   >=<     ===      ===      ===
+
