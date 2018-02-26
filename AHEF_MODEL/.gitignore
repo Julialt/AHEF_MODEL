@@ -1,5 +1,5 @@
 RUN_INPUTS/test*
 DEBUG
 OUTPUT
-tmp.csh
+*.csh
 
