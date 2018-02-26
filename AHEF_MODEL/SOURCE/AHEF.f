@@ -52,7 +52,7 @@ C=====================================================================
 C  Loop over specified runs
 C=====================================================================
 
-      DO WHILE (.not. eof)
+      DO WHILE (.NOT. eof)
 
         runcount = runcount + 1
         WRITE (*,'(A,i3.3)') ' Executing run ',runcount
@@ -79,7 +79,7 @@ C  Parse filenames for communication files
 C
 C  Framework enters with module whose input file corresponds to the
 C  first X in the runfile, exits with module whose output file corresponds
-C  to the last X in the runfile, WRITEs intermediate files only IF marked
+C  to the last X in the runfile, writes intermediate files only if marked
 C
 C  Output file PFN assumed same as input file PFN unless specified
 C=====================================================================
@@ -147,12 +147,12 @@ C=====================================================================
 
         IF (( endpoint .ge. 2      )  .and.
      +      ( oznflag .or. returned)  .and.
-     +      ( .not. errflag        )) THEN
+     +      ( .NOT. errflag        )) THEN
           CALL exposure
         ENDIF
 c
        IF (( endpoint .eq. 3 )  .and.
-     +      ( .not. errflag   )) THEN
+     +      ( .NOT. errflag   )) THEN
          CALL effects
         ENDIF
 
