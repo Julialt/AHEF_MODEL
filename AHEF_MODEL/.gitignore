@@ -1,4 +1,4 @@
-RUN_INPUTS/test*
+RUN_IO/test*
 DEBUG
 OUTPUT
 *.csh
