@@ -2,4 +2,5 @@ RUN_IO/test*
 DEBUG
 OUTPUT
 *.csh
+SOURCE/SCRATCH
 
