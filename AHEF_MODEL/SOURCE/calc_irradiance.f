@@ -13,6 +13,8 @@ c
 c
       REAL daily,czen
       REAL dobunit
+
+      REAL rtemp1,rtemp2
 c - printing out for input into VBA
 ccc--      REAL czenarr(17,12)
 c
@@ -94,26 +96,34 @@ C  Real dobson and cos(zen) fall between values on lookup table axes
 C  Interpolate in two dimensions to adjust
 C=====================================================================
 
-                clow = aint(col)
+!                clow = aint(col)
+                clow = IFIX(col)
                 chigh = clow + 1
-                rlow = aint(row)
+!                rlow = aint(row)
+                rlow = IFIX(row)
                 rhigh = rlow + 1
 c      WRITE(*,*)'checks',rlow,clow,chigh
-                temp1 = lookup(rlow,clow) + (lookup(rlow,chigh) -
-     +                  lookup(rlow,clow)) * (col - clow)
-                temp2 = lookup(rhigh,clow) + (lookup(rhigh,chigh) -
-     +                  lookup(rhigh,clow)) * (col - clow)
 
+! CAUTION !! INTERPOLATION DEACTIVATED PENDING REWRITE -JMLT Feb 2018!
+!                rtemp1 = lookup(rlow,clow) 
+!     &          + (lookup(rlow,chigh) - lookup(rlow,clow)) 
+!     &          * (col - clow)
+!                rtemp2 = lookup(rhigh,clow) 
+!     &          + (lookup(rhigh,chigh) - lookup(rhigh,clow)) 
+!     &          * (col - clow)
+
+                rtemp1 = lookup(1,1) ! JMLT DUMMY LINE
+                rtemp2 = lookup(1,1) ! JMLT DUMMY LINE
                 daily = daily +
-     +                  temp1 + (temp2 - temp1) * (row - rlow)
+     +                  rtemp1 + (rtemp2 - rtemp1) * (row - rlow)
               ENDIF
 c
-cc            WRITE(917,*)'daily = ',temp1 + (temp2 - temp1) * (row - rlow),daily
+cc            WRITE(917,*)'daily = ',rtemp1 + (rtemp2 - rtemp1) * (row - rlow),daily
 c
       IF ((iyear.EQ.1985).AND.(icty.EQ.1).AND.(imonth.EQ.1).AND.
      +   (time.EQ.12)) THEN
       WRITE(661,*)iyear,imonth,ilat,icty,cty_lat(icty),dobunit,
-     +   time,czen,temp1,temp2,daily
+     +   time,czen,rtemp1,rtemp2,daily
       ENDIF
             ENDDO ! time
 

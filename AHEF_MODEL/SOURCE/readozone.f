@@ -3,7 +3,7 @@ C=====================================================================
 C=====================================================================
 C  Read Dobson Unit matrix (D.U. for given latitude and month)
 C=====================================================================
-
+      IMPLICIT NONE
 C$DEBUG: 'D'
 
       INCLUDE 'files.fi'
@@ -14,16 +14,19 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
 
       LOGICAL eof
       CHARACTER*12 filename
+      CHARACTER*52 Defaultfile
+
+      REAL adummy
 
       errflag = .false.
 C MRLM ozone debugging 10/2008
 cc       WRITE(*,*)'in readozone - filename is:',filename
 C
-      OPEN(iunit, file = filename, Defaultfile=
-     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data\'
-c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data\',
-     + ,status = 'OLD', 
-     + err = 1030)
+!      OPEN(iunit, file = filename, Defaultfile=
+!     +"../INPUT_DATA/BASELINE.OZN"
+!     + ,status = 'OLD', 
+!     + err = 1030)
+      OPEN(iunit, file = filename, status = 'OLD', err = 1030)
       WRITE (errfile,*) 'Reading OZONE'
 
       CALL skip( iunit, eof)

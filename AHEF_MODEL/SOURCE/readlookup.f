@@ -4,7 +4,7 @@ C=====================================================================
 C   Read lookup table for given action spectrum
 C   (i.e., irradiance by zenith angle and DObson units)
 C=====================================================================
-
+      IMPLICIT NONE
 C$DEBUG: 'D'
 
       INCLUDE 'files.fi'
@@ -15,13 +15,14 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
       INCLUDE 'exposure.fi'
 
       CHARACTER*12 filename
-      INTEGER row,col
+      INTEGER row,col,idummy
       LOGICAL eof
 
-      OPEN(iunit, file = filename,Defaultfile=
-     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data',
-c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data\',
-     +status = 'OLD', err = 1040)
+!      OPEN(iunit, file = filename,Defaultfile=
+!     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data',
+!c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data\',
+!     +status = 'OLD', err = 1040)
+      OPEN(iunit, file = filename, status = 'OLD', err = 1040)
       WRITE(errfile,*) 'Reading LOOKUP'
 c
 c      mrlm 
@@ -39,5 +40,5 @@ c
 1040  CALL error(40,*999)
 1070  CALL error(70,*999)
 
-      END SUBROUTINE readlookup(filename)
+      END SUBROUTINE readlookup
 

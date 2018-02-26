@@ -46,9 +46,9 @@ c
 c      WRITE(ounit, 102) 'Latitudes:    >',numlats,'<'
       WRITE(ounit, 103) 'Max Cohort:  >',cohi_year,'<'
 
-100   FORMAT(t4,a,a8,a,\)
+100   FORMAT(t4,a,a8,a)
 101   FORMAT(t8,a,i4,a)
-102   FORMAT(t4,a,i2.2,a,\)
+102   FORMAT(t4,a,i2,a)
 103   FORMAT(t11,a,i4,a)
 
       DO icty = 1, numcty

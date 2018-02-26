@@ -7,6 +7,7 @@ C   Output:   cases by year,measure
 C   ModIFied to compute incidence for scenarios using BAFs and baseline
 C   incidence
 C=====================================================================
+c      IMPLICIT NONE
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
@@ -22,6 +23,8 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
       CHARACTER*12 endpttmp
       CHARACTER*3  baftype
       CHARACTER*4  drtmp
+      CHARACTER*23  text
+      CHARACTER*23  tempchar
       REAL coh_wght,tmp1,tmp2,wtd_incid, cmflag
       REAL expwgt(maxages*step)
       INTEGER year, poptmp
@@ -80,7 +83,7 @@ cc      mrlm debug 10/2008
 100   FORMAT(t19,a8,t39,i4,t47,i4)
 
       CALL skip(effrun, eof)
-      READ( effrun, 101 ) tempchar
+      READ( effrun, 101 ) text,tempchar
       IF ((tempchar .EQ. 'Y') .OR. (tempchar .EQ. 'y') .OR.
      +    (tempchar .EQ. 'T') .OR. (tempchar .EQ. 't') .OR.
      +    (tempchar .EQ. 'X') .OR. (tempchar .EQ. 'x')) THEN
@@ -90,7 +93,7 @@ cc      mrlm debug 10/2008
       ENDIF
 
       CALL skip(effrun, eof)
-      READ( effrun, 101 ) tempchar
+      READ( effrun, 101 ) text,tempchar
       IF ((tempchar .EQ. 'Y') .OR. (tempchar .EQ. 'y') .OR.
      +    (tempchar .EQ. 'T') .OR. (tempchar .EQ. 't') .OR.
      +    (tempchar .EQ. 'X') .OR. (tempchar .EQ. 'x')) THEN
@@ -99,7 +102,7 @@ cc      mrlm debug 10/2008
         byage = .false.
       ENDIF
 
-101   FORMAT(t23,a1)
+101   FORMAT(a23,a1)
 
       WRITE (*,*) 'Reading population...'
 C MRLM  10/2008 debug
@@ -166,9 +169,11 @@ C=====================================================================
 C  Read BAFs
 C=====================================================================
 
-        OPEN(iunit, FILE = 'BAF.DAT',Defaultfile=
-     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
+!        OPEN(iunit, FILE = 'BAF.DAT',Defaultfile=
+!     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
 c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
+
+        OPEN(iunit, FILE = 'BAF.DAT')
         CALL skip(iunit, eof)
 
         READ(iunit, 215) baftype
@@ -199,10 +204,11 @@ C=====================================================================
 C  Read Exposure Weights
 C=====================================================================
 
-        OPEN (iunit,file='expwgts.dat',Defaultfile=
-     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
+!        OPEN (iunit,file='expwgts.dat',Defaultfile=
+!     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
 c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
 
+        OPEN (iunit,file='expwgts.dat')
         CALL skip (iunit, eof)
 
         DO WHILE (.NOT. eof)
@@ -228,10 +234,13 @@ C=====================================================================
 C  Read Baseline Incidence
 C=====================================================================
 
-        OPEN(iunit, FILE = 'baseinc.txt',Defaultfile=
-     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
+!        OPEN(iunit, FILE = 'baseinc.txt',Defaultfile=
+!     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
 c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
+
+        OPEN(iunit, FILE = 'baseinc.txt')
         CALL skip( iunit, eof )
+
         READ(iunit, 325) colotmp, cohitmp
         CALL skip( iunit, eof )
 
@@ -616,24 +625,24 @@ c
 
           DO ipop=1, maxpops
 
-                  DO icty = 1,numcty
+            DO icty = 1,numcty
 
                        icomp = int(cty_fip(icty)/1000)
 c
-                 DO ii=1, ireg
-                 IF (icomp.EQ.group1(ii)) THEN
+              DO ii=1, ireg
+                IF (icomp.EQ.group1(ii)) THEN
 c                      icg1=icg1 + 1
 
-                        DO icohort = colo,cohi
-                         DO iagey=1,maxages*step +4
+                  DO icohort = colo,cohi
+                    DO iagey=1,maxages*step +4
 
-                       st_tot_scen(ii,ipop)= caseca(icohort,iagey,icty,ipop) +
-     +              st_tot_scen(ii,ipop)
-                     st_tot_base(ii,ipop)=casecab(icohort,iagey,icty,ipop) +
-     +                    st_tot_base(ii,ipop)
-                        st_tot_diff(ii,ipop)=caseca(icohort,iagey,icty,ipop) -
-     +               casecab(icohort,iagey,icty,ipop) + 
-     +               st_tot_diff(ii,ipop)
+                 st_tot_scen(ii,ipop)= st_tot_scen(ii,ipop)
+     &           + caseca(icohort,iagey,icty,ipop) 
+                st_tot_base(ii,ipop)= st_tot_base(ii,ipop)
+     &           + casecab(icohort,iagey,icty,ipop) 
+                st_tot_diff(ii,ipop)= st_tot_diff(ii,ipop) 
+     &           + caseca(icohort,iagey,icty,ipop)
+     &           - casecab(icohort,iagey,icty,ipop)
 c
 c            IF ((cty_fip(icty).EQ.11001).AND.(ipop.EQ.1)) THEN
 c             IF (caseca(icohort,iagey,icty,ipop).NE.0) THEN
@@ -641,11 +650,11 @@ c        WRITE(911,*)iagey,caseca(icohort,iagey,icty,ipop),
 c     +    casecab(icohort,iagey,icty,ipop) 
 c             ENDIF
 c          ENDIF
-                        ENDDO
-                      ENDDO
+                    ENDDO
+                  ENDDO
 
-                   ENDIF
-                   ENDDO ! ii
+                ENDIF
+              ENDDO ! ii
 c
 c      IF ((cty_fip(icty).EQ.11001).AND.(ipop.EQ.1)) THEN
 c            WRITE(911,*)'icohort,iagey=',icohort,' ',iagey,
@@ -656,7 +665,7 @@ c     +               casecab(icohort,iagey,icty,ipop),
 c     +               st_tot_diff(ii,ipop)
 c      ENDIF
 c
-           ENDDO ! icty
+            ENDDO ! icty
 c
       IF (ipop.EQ.1) THEN
 c       IF (st_tot_base(10,ipop).EQ.(0.0)) THEN
@@ -748,13 +757,13 @@ c
 c
                          DO iagey=1,maxages*step +4
 
-                       st_coh_scen(ii,ic,ipop)= caseca(icohort,iagey,icty,ipop) +
-     +              st_coh_scen(ii,ic,ipop)
-                     st_coh_base(ii,ic,ipop)=casecab(icohort,iagey,icty,ipop) +
-     +                    st_coh_base(ii,ic,ipop)
-                        st_coh_diff(ii,ic,ipop)=caseca(icohort,iagey,icty,ipop) -
-     +               casecab(icohort,iagey,icty,ipop) + 
-     +               st_coh_diff(ii,ic,ipop)
+             st_coh_scen(ii,ic,ipop)= st_coh_scen(ii,ic,ipop)
+     &         + caseca(icohort,iagey,icty,ipop) 
+             st_coh_base(ii,ic,ipop)= st_coh_base(ii,ic,ipop)
+     &         + casecab(icohort,iagey,icty,ipop) 
+             st_coh_diff(ii,ic,ipop)= st_coh_diff(ii,ic,ipop)
+     &         + caseca(icohort,iagey,icty,ipop)
+     &         - casecab(icohort,iagey,icty,ipop)
 c
                         ENDDO  ! iagey
                       ENDDO  ! icohort
@@ -830,20 +839,20 @@ c
                              DO ipop = 1,maxpops
 c
                   IF ((ipop.EQ.1).OR.(ipop.EQ.2)) THEN  ! light skinned
-                       ct_tot_diff_l(icty)= caseca(icohort,iagey,icty,ipop) -
-     +               casecab(icohort,iagey,icty,ipop) + 
-     +              ct_tot_diff_l(icty)
+                  ct_tot_diff_l(icty)= caseca(icohort,iagey,icty,ipop) -
+     +            casecab(icohort,iagey,icty,ipop) + 
+     +            ct_tot_diff_l(icty)
 c      
                  ENDIF                  ! dark skinned
-                  IF ((ipop.EQ.3).OR.(ipop.EQ.4)) THEN  !
 c
 cc      IF ((icomp.EQ.10).AND.(ipop.EQ.3)) THEN
 cc            WRITE(*,*)'ipop =',icty,ipop,caseca(icohort,iagey,icty,ipop)
 cc      ENDIF
 c
-                     ct_tot_diff_d(icty)=caseca(icohort,iagey,icty,ipop) -
-     +               casecab(icohort,iagey,icty,ipop) + 
-     +                    ct_tot_diff_d(icty)
+                  IF ((ipop.EQ.3).OR.(ipop.EQ.4)) THEN  !
+                   ct_tot_diff_d(icty)=caseca(icohort,iagey,icty,ipop) -
+     +             casecab(icohort,iagey,icty,ipop) + 
+     +             ct_tot_diff_d(icty)
                   ENDIF
 
                         ENDDO

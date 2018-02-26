@@ -34,8 +34,8 @@ c      WRITE(ounit, '(A)') '*  EFFECTS(year,latitude)'
       WRITE(ounit,101)   ' County:      >',numcty,'<'
 c      WRITE(ounit, 101) 'Latitudes:    >',numlats,'<'
 
-100   FORMAT(t4,a,a8,a,\)
-101   FORMAT(t8,a,i2.2,a)
+100   FORMAT(t4,a,a8,a)
+101   FORMAT(t8,a,i2,a)
 
       WRITE(ounit, '(A)') '*'
       WRITE(ounit, 110) '*', (lats(ilat), ilat = 1, numlats)

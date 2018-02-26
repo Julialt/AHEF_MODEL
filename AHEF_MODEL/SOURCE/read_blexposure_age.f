@@ -34,10 +34,10 @@ c
         cohi = (cohi_year - colo_year)/step + 1
 
 c        DO ilat = 1, numlats
-         DO icty = 1,numcty
+        DO icty = 1,numcty
 
           CALL skip( scratchagebl, eof )
-            READ (scratchagebl,'(t18,i5)') cty(icty)
+          READ (scratchagebl,'(t18,i5)') cty(icty)
 cc      WRITE(*,*)' cty(icty) = ',cty(icty)
 c
           CALL skip( scratchagebl, eof )
@@ -61,6 +61,7 @@ c       WRITE (*,*) indexname,indextmp
 
         CALL skip( scratchagebl, eof )
 
+      ENDDO
       GOTO 1130
 
 999   RETURN

@@ -1,7 +1,9 @@
 RUN_IO/test*
 DEBUG
 OUTPUT
+*.d
 *.o
 *.csh
+*.a
 SOURCE/SCRATCH
 

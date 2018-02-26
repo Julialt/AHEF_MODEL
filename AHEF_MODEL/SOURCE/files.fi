@@ -8,11 +8,16 @@ C=====================================================================
       INTEGER runfile, errfile, iunit, ounit, exprun, effrun, scratch
       INTEGER scratchbl, scratchage, scratchagebl, o1unit, o2unit
       INTEGER o3unit
+      INTEGER iounit,ounit21,ounit31,ounit441
 
       PARAMETER ( runfile   = 10,     ! global run file
      +            errfile   = 20,     ! global error file
      +            iunit     = 30,     ! generic input
+     +            iounit    = 35,     ! generic input
      +            ounit     = 40,     ! generic output
+     +            ounit21   = 21,     ! generic output
+     +            ounit31   = 31,     ! generic output
+     +            ounit441  = 441,     ! generic output
      +            o1unit    = 41,     ! generic output
      +            o2unit    = 42,     ! generic output
      +            o3unit    = 43,     ! generic output

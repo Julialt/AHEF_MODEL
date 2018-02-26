@@ -132,5 +132,5 @@ c
 1050  CALL error(50, *999)
 1070  CALL error(70, *999)
 
-      END SUBTROUTINE effects
+      END SUBROUTINE exposure
 

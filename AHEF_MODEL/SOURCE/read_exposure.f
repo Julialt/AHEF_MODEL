@@ -66,5 +66,5 @@ c       WRITE (*,*) indexname,indextmp
 
 1130  CALL error(130, *999)
 
-      END SUBROUTINE read_exposure(indexname)
+      END SUBROUTINE read_exposure
 
