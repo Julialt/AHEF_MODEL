@@ -1,6 +1,8 @@
 RUN_IO/test*
 DEBUG
 OUTPUT
+OBJ
+*.o
 *.csh
 SOURCE/SCRATCH
 
