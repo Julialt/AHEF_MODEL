@@ -13,8 +13,6 @@ c
 c
       REAL daily,czen
       REAL dobunit
-
-      REAL rtemp1,rtemp2
 c - printing out for input into VBA
 ccc--      REAL czenarr(17,12)
 c
@@ -25,7 +23,7 @@ c
 c
 c MRLM match county lat with latitude band to pick out the right ozone (DU)
 c first read in county/latitude file
-              CALL read_ctylat
+              call Read_CTYLAT
 c
       DO icty = 1, numcty
 c        latitude = lats(ilat)
@@ -35,7 +33,7 @@ cMRLM for each county, calculate the latitude
 
 ccNEW - determine latitude region to use for dobson 
 c
- 801                  IF ((lat.ge.20).AND.(lat.le.30)) THEN
+ 801              IF ((lat.ge.20).AND.(lat.le.30)) THEN
                         ilat = 3
                   ELSEIF ((lat.ge.30).AND.(lat.le.40)) THEN
                         ilat = 2
@@ -77,11 +75,11 @@ c
 
             DO time = 4, 20                   ! loop plausible daylight hrs
 c
-                  CALL zenith(lat,imonth,day,time,czen)
+                  call zenith(lat,imonth,day,time,czen)
 c
 cc      WRITE(917,*)' cos zenith = ',day,time,czen
 c
-c              CALL zenith(latitude, imonth, day, time, czen)
+c              call zenith(latitude, imonth, day, time, czen)
 c
 cc            WRITE(*,*)'dobson',iyear,imonth,ilat,dobunit,row
 cc            WRITE(*,*)'zenith',day,time,lat,czen
@@ -96,34 +94,32 @@ C  Real dobson and cos(zen) fall between values on lookup table axes
 C  Interpolate in two dimensions to adjust
 C=====================================================================
 
-!                clow = aint(col)
-                clow = IFIX(col)
+                clow = aint(col)
                 chigh = clow + 1
-!                rlow = aint(row)
-                rlow = IFIX(row)
+                rlow = aint(row)
                 rhigh = rlow + 1
 c      WRITE(*,*)'checks',rlow,clow,chigh
+!                temp1 = lookup(rlow,clow) + (lookup(rlow,chigh) -
+!     +                  lookup(rlow,clow)) * (col - clow)
+!                temp2 = lookup(rhigh,clow) + (lookup(rhigh,chigh) -
+!     +                  lookup(rhigh,clow)) * (col - clow)
+! JMLT TEMPORARY FIX:
+! lookup has issues:
+! Type conversion of subscript expression for lookup
 
-! CAUTION !! INTERPOLATION DEACTIVATED PENDING REWRITE -JMLT Feb 2018!
-!                rtemp1 = lookup(rlow,clow) 
-!     &          + (lookup(rlow,chigh) - lookup(rlow,clow)) 
-!     &          * (col - clow)
-!                rtemp2 = lookup(rhigh,clow) 
-!     &          + (lookup(rhigh,chigh) - lookup(rhigh,clow)) 
-!     &          * (col - clow)
+                temp1 = 1
+                temp2 = 1
 
-                rtemp1 = lookup(1,1) ! JMLT DUMMY LINE
-                rtemp2 = lookup(1,1) ! JMLT DUMMY LINE
                 daily = daily +
-     +                  rtemp1 + (rtemp2 - rtemp1) * (row - rlow)
+     +                  temp1 + (temp2 - temp1) * (row - rlow)
               ENDIF
 c
-cc            WRITE(917,*)'daily = ',rtemp1 + (rtemp2 - rtemp1) * (row - rlow),daily
+cc            WRITE(917,*)'daily = ',temp1 + (temp2 - temp1) * (row - rlow),daily
 c
       IF ((iyear.EQ.1985).AND.(icty.EQ.1).AND.(imonth.EQ.1).AND.
      +   (time.EQ.12)) THEN
       WRITE(661,*)iyear,imonth,ilat,icty,cty_lat(icty),dobunit,
-     +   time,czen,rtemp1,rtemp2,daily
+     +   time,czen,temp1,temp2,daily
       ENDIF
             ENDDO ! time
 

@@ -7,18 +7,95 @@ C  chemicals on human health and the environment.
 C
 C  This framework has three major components:
 C     1. Atmospheric model:  ODS emis -> Ozone depletion    : AHEF.f
-C     2. Exposure model:     Ozone depletion -> UV exposure : exposure.f
-C     3. Effects model:      UV Exposure -> Health effects  : effects.f
+C     2. Exposure model   :  Ozone depletion -> UV exposure : exposure.f
+C     3. Effects model    :  UV Exposure -> Health effects  : effects.f
+C
 C=====================================================================
+C PURPOSE OF THIS PROGRAM UNIT:
+C     - read run file AHEF.RUN
+C     - extract names of input files
+C     - extract flags for siumlation type
+C     - based on flags, call exposure or effects subroutine
+C     - pass file names to subroutines
+C
+C=====================================================================
+C NAMES USED IN THIS PROGRAM UNIT:
+C
+C FILENAMES:   
+C IN/OUT UNIT          WHERE_USED           DESCRIPTION
+C ------
+C INPUT  iunit(30)     readozone.f          DU matrix for lat/month
+C    oznname    = name(1:len_trim(name))//'.'//ozn_ext
+C INPUT  exprun(50)    exposure.f           exposure run file (input pointers)
+C    exprunname = 'EXP_RUN.'//exprun_ext
+C INPUT  effrun(60)    effects.f            effects run file (input pointers)
+C    effrunname = 'EFF_RUN.'//effrun_ext
+C ------
+C Both the following are also OUTPUT: as expfilename on ounit(40)
+C    written by routine writexage.f (exposure model)
+C             then used as input to (effects model)
+C INPUT  scratchage(71) read_exposure_age.f age exposure scratch file
+C    xagename   = name(1:len_trim(name))//'.'//'XSA'
+C INPUT  scratchagebl(81) read_blexposure_age.f b/l age exposure file
+C    xageblname = name(1:len_trim(name))//'.'//'XBA 
+C ------
+C OUTPUT ounit(40)     write_eff_agg_age.f  age spec file
+C    effagename = name(1:len_trim(name))//'.'//'efa'
+C ------
+C APPARENTLY UNUSED scratchbl(80) effects.f baseline exposure scratch file
+C    expblname  = name(1:len_trim(name))//'.'//'XBL'
+C ------
+C (following names are defined but not currently used)
+C    atmrunname = 'ATM_RUN.'//atmrun_ext
+C    effname = name(1:len_trim(name))//'.'//eff_ext
+C    eminame = name(1:len_trim(name))//'.'//emi_ext
+C    expname = name(1:len_trim(name))//'.'//exp_ext -or- scratch.tmp
+C
+C OTHER CHARACTER VARIABLES:
+C    outname = read from AHEF.RUN on unit runfile(10)
+C    name    = outname
+C
+C    emi_ext, ozn_ext, exp_ext, eff_ext = file extensions in AHEF.RUN
+C    atmrun_ext, exprun_ext, effrun_ext = file extensions in AHEF.RUN
+C NB: currently using only ozn_ext, atmrun_ext, exprun_ext, effrun_ext
+C
+C    temp1,2,3,4 = io selector " "/"X" for each file type in AHEF.RUN
+C
+C LOGICAL VARIABLES:
+C    eof = end-of-file flag
+C    errflag initialised T, enabling CALL effects or exposure
+C    following are readin fields from AHEF.RUN : set input filenames
+C    emiflag T IF (temp1 .ne. ' ') THEN -> CALL solomon
+C    oznflag T IF (temp2 .ne. ' ') THEN -> set o3 filename
+C    expflag T IF (temp3 .ne. ' ') THEN -> set endpoint = 2
+C    effflag T IF (temp4 .ne. ' ') THEN -> reset endpoint = 3
+C    endpoint = 2 -> exposure only; = 3 -> also effects
+C    returned T if we came back from Solomon
+C             (enables bypassing atmos model)
+C
+C INTEGER VARIABLES:
+C    i = 1,12
+C    flagcount = # of TRUE flags
+C    runcount  = # of requested runs
+C
+C REAL VARIABLES:
+C    (none)
+C
+C=====================================================================
+      !USE setup
+
+      IMPLICIT NONE
 
 C$DEBUG: 'D'
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
-      character*1 temp1,temp2,temp3,temp4
+      INCLUDE 'setup.h'
+
       integer flagcount, endpoint
       logical eof
 
+      character*1 temp1,temp2,temp3,temp4
       character*3 emi_ext, ozn_ext, exp_ext, eff_ext
       character*3 atmrun_ext, exprun_ext, effrun_ext
       character*8 name, outname
@@ -27,6 +104,17 @@ C$DEBUG: 'D'
      +      'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' /
 
 C=====================================================================
+C  Initialize flags
+      eof = .false.
+      errflag = .false.
+      emiflag = .false.
+      oznflag = .false.
+      expflag = .false.
+      effflag = .false.
+C  Initialize counters
+      flagcount = 0
+      runcount = 0
+C=====================================================================
 C  Open global runfile and global default names and extensions
 C=====================================================================
 
@@ -34,18 +122,17 @@ C=====================================================================
       WRITE (*,*) 'ICF Incorporated, 1997'
       WRITE (*,*)
 
-      OPEN(errfile, FILE = 'AHEF.ERR')
-C     OPEN(runfile, FILE = 'AHEF.RUN', status = 'OLD', ERR = 1010)
-      OPEN(runfile, FILE = 'AHEF.RUN', status = 'OLD')
+      OPEN(errfile,FILE=dir_io//'AHEF.ERR')
+      OPEN(runfile,FILE=dir_io//'AHEF.RUN',status='OLD',ERR = 1010)
+C      OPEN(runfile,FILE=dir_io//'AHEF.RUN',status = 'OLD')
 
       CALL skip( runfile, eof )
-      READ( runfile, 100, err=1070 )
-     +                      emi_ext, ozn_ext, exp_ext, eff_ext
-      WRITE( errfile, 100 )
-     +                      emi_ext, ozn_ext, exp_ext, eff_ext
+      READ(runfile,100,err=1070) emi_ext, ozn_ext, exp_ext, eff_ext
+      WRITE(errfile,100)         emi_ext, ozn_ext, exp_ext, eff_ext
+
 100   FORMAT(t26,4(a3,3x))
 
-      CALL skip( runfile, eof )
+      CALL skip(runfile,eof)
       runcount = 0
 
 C=====================================================================
@@ -172,11 +259,10 @@ C999   return
 1070  WRITE (*,*) 'Error 1070'
 1071  WRITE (*,*) 'Error 1071'
 
-
-
 C1010  CALL error(10, 999)
 C1020  CALL error(20, 300)
 C1070  CALL error(70, 999)
 C1071  CALL error(70, 300)
+
       END PROGRAM AHEF
 

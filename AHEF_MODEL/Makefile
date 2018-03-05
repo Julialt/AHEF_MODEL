@@ -1,5 +1,5 @@
 .SUFFIXES:
-.SUFFIXES : .f .fi .h .o .d .a
+.SUFFIXES : .f .fi .h .o .d .a .mod
 #---------------------------------------------
 # declaration of definitions (macros)
 
@@ -53,8 +53,8 @@ vpath %.o $(OBJDIR)
 
 MAIN_SOURCE = AHEF.f
  
-# find all sources *.f in LIB and subdirectories
-SOURCES := $(wildcard $(LIBDIR)/*.f) $(wildcard $(LIBDIR)/**/*.f)
+# find all sources *.f in LIB ##and subdirectories
+SOURCES := $(wildcard $(LIBDIR)/*.f) ##$(wildcard $(LIBDIR)/**/*.f)
 
 #create list of *.o files
 OBJS := $(patsubst $(LIBDIR)/%.f,$(OBJDIR)/%.o,$(SOURCES))
@@ -75,12 +75,12 @@ include $(OBJS:$(OBJDIR)/%.o=$(OBJDIR)/%.d)
 $(OBJDIR)/%.o : %.f
 	$(FC) $(FFLAGS) -c $< -o $@
 
-#rule to compile aklib.a
-$(OBJDIR)/aklib.a : $(OBJS)
+#rule to compile aheflib.a
+$(OBJDIR)/aheflib.a : $(OBJS)
 	ar -r $@ $(OBJS)
 
 AHEF : $(OBJDIR)/aheflib.a $(MAINDIR)/$(MAIN_SOURCE)
-	$(FC) $(MAINDIR)/$(MAIN_SOURCE) $(PRECFLAG) $(LNKFLAGS) $(INCLUDES) $(OBJDIR)/aklib.a -I $(INCDIR) -o$(MAINDIR)/$@
+	$(FC) $(MAINDIR)/$(MAIN_SOURCE) $(PRECFLAG) $(LNKFLAGS) $(INCLUDES) $(OBJDIR)/aheflib.a -I $(INCDIR) -o$(MAINDIR)/$@
 
 
 clean :

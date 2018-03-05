@@ -31,8 +31,9 @@ C     REAL cases (minyear:maxyear, maxages, maxlats, maxpops)
       INTEGER poplo, pophi, outputlo, outputhi
       INTEGER popmaxyr, popminyr, yrstep
 c
-	INTEGER cty(numcty)
-	COMMON /effect/ cty
+      INTEGER cty(numcty)
+
+      COMMON /effect/ cty
       COMMON /effect/ lats, incid_bl
       COMMON /effect/ expage, expagebl, incage2, incage_bl
       COMMON /effect/ pop, coeff, total, age_coeffs

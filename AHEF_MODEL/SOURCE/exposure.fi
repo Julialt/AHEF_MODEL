@@ -11,15 +11,15 @@ C=====================================================================
       REAL dobson(minyear:maxyear,12,maxlats)
       REAL lookup(lrows,lcols)
 c      REAL yearlyirrad(minyear:maxyear,maxcty)
-	REAL yearlyirrad(minyear:maxyear,numcty)
+      REAL yearlyirrad(minyear:maxyear,numcty)
       REAL weights(maxages,maxages)
 C     REAL expos_out(maxcohorts, maxages, maxlats)
 C     REAL expos_outbl(maxcohorts, maxages, maxlats)
 c
 c      REAL expos_age(maxcohorts, topage+4, maxcty)
 c      REAL expos_agebl(maxcohorts, topage+4, maxcty)
-	REAL expos_age(maxcohorts, topage+4, numcty)
-	REAL expos_agebl(maxcohorts, topage+4, numcty)
+      REAL expos_age(maxcohorts, topage+4, numcty)
+      REAL expos_agebl(maxcohorts, topage+4, numcty)
 
       LOGICAL expblflag
 

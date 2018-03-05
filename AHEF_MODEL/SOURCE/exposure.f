@@ -5,10 +5,14 @@ C   This subroutine contains the exposure module.
 C   Input:    ozone in dobson(year,month,latitude)
 C   Output:   exposure(cohORt,iagey,ilat)
 C=====================================================================
+      !USE setup
+
+      IMPLICIT NONE
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
       INCLUDE 'exposure.fi'
+      INCLUDE 'setup.h'
 
       REAL row,col
       CHARACTER*8  indexname
@@ -17,21 +21,17 @@ C=====================================================================
 
       WRITE (*,*) 'Running exposure model . . . .'
 
-
+! INITIALIZE SOME QUANTITIES
       yrlo = 0
       yrhi = 0
 
-c      mrlm
       WRITE(*,*)' ozone filename = ',oznname
-c
-C     CALL readozone('HISTORIC.OZN')
-C     errflag = .false.
 
-      OPEN(exprun, file =exprunname, 
+      OPEN(exprun,file=dir_dat//exprunname,status='OLD',err=1050)
+
 C      Defaultfile=
 C     +      'C:\Documents and Settings\18959\Desktop\AHEF
 C     +\countyAHEF\miniruns\input DATA\',
-     +  status = 'OLD', err = 1050)
       WRITE (errfile,*) 'Reading exposure runfile'
 c mrlm for 
 cc      WRITE(*,*)'exprunname = ',exprunname
