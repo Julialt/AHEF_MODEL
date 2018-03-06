@@ -15,7 +15,8 @@ c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
 c     +countyAHEF\miniruns\run group 1\global.fi'
       INCLUDE 'effects.fi'
 
-      LOGICAL eof, first, byyear, byage
+!      LOGICAL eof, first, byyear, byage
+      LOGICAL first, byyear, byage
       INTEGER count,yrlplo,yrlphi,coh1,coh2,iy,iageg
       INTEGER cohyrtmp,colotmp,cohitmp,ilattmp
       INTEGER rlat

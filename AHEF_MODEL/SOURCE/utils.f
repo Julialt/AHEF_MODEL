@@ -225,20 +225,25 @@ C  Positions file at next data record by skipping those comment
 C  records denoted by an asterisk in column 1.  The flag indicates
 C  when the end of file has been reached.
 C=====================================================================
+      IMPLICIT NONE
+
+! INCLUDING global.fi requires subroutine call with NO ARGUMENTS !
+!      INCLUDE 'global.fi'    
 
       INTEGER iounit
-      LOGICAL eof
+      LOGICAL eof     ! only if global.fi not invoked
       CHARACTER*1 col1
 
       eof = .false.
 
-100   READ(iounit,'(a1)', END=200) col1
+100   READ(iounit,'(a1)',END=200) col1
       IF (col1 .NE. '*') GOTO 300
       GOTO 100
 
 200   eof = .true.
 
 300   BACKSPACE iounit
+
       RETURN
    
       END SUBROUTINE skip

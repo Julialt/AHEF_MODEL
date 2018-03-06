@@ -15,7 +15,8 @@ c mlrm
 c
       CHARACTER*12 filename
       CHARACTER tempchar
-      LOGICAL eof, expinterp, last
+!      LOGICAL eof, expinterp, last
+      LOGICAL expinterp, last
       INTEGER col, year, lastyear, yrlp
       REAL totpop(minyear:maxyear), temp
       REAL regbrk(minyear:maxyear, maxlats)

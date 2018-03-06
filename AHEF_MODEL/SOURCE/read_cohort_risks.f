@@ -12,7 +12,7 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
       INCLUDE 'effects.fi'
 
       REAL value, lastvalue
-      LOGICAL eof
+!      LOGICAL eof
       INTEGER yrlp, lastyear, year
 
       OPEN(iunit, file = cohortname, status = 'OLD', err = 1120)

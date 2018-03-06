@@ -62,7 +62,6 @@ C
 C    temp1,2,3,4 = io selector " "/"X" for each file type in AHEF.RUN
 C
 C LOGICAL VARIABLES:
-C    eof = end-of-file flag
 C    errflag initialised T, enabling CALL effects or exposure
 C    following are readin fields from AHEF.RUN : set input filenames
 C    emiflag T IF (temp1 .ne. ' ') THEN -> CALL solomon
@@ -92,15 +91,15 @@ C$DEBUG: 'D'
       INCLUDE 'global.fi'
       INCLUDE 'setup.h'
 
-      integer flagcount, endpoint
-      logical eof
+      INTEGER flagcount, endpoint
+!      LOGICAL eof
 
-      character*1 temp1,temp2,temp3,temp4
-      character*3 emi_ext, ozn_ext, exp_ext, eff_ext
-      character*3 atmrun_ext, exprun_ext, effrun_ext
-      character*8 name, outname
+      CHARACTER*1 temp1,temp2,temp3,temp4
+      CHARACTER*3 emi_ext, ozn_ext, exp_ext, eff_ext
+      CHARACTER*3 atmrun_ext, exprun_ext, effrun_ext
+      CHARACTER*8 name, outname
 
-      data (monthname(i), i=1, 12) / 'Jan', 'Feb', 'Mar', 'Apr',
+      DATA (monthname(i), i=1, 12) / 'Jan', 'Feb', 'Mar', 'Apr',
      +      'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' /
 
 C=====================================================================
@@ -109,8 +108,8 @@ C  Initialize flags
       errflag = .false.
       emiflag = .false.
       oznflag = .false.
-      expflag = .false.
       effflag = .false.
+      expflag = .false.
 C  Initialize counters
       flagcount = 0
       runcount = 0
@@ -192,6 +191,7 @@ C=====================================================================
             oznflag = .false.
             oznname = 'SCRATCH.TMP'
         ENDIF
+        WRITE(*,*)oznname
 
         expname = name(1:len_trim(name))//'.'//exp_ext
         expblname = name(1:len_trim(name))//'.'//'XBL'    ! Baseline

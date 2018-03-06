@@ -10,7 +10,7 @@ c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
 c     +countyAHEF\miniruns\run group 1\global.fi'
       INCLUDE 'effects.fi'
 
-      LOGICAL eof
+!      LOGICAL eof
       CHARACTER*8 indexname, indextmp
 
       WRITE (errfile, *) 'Reading Baseline Exposure'

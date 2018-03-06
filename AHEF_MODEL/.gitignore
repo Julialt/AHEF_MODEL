@@ -1,4 +1,4 @@
-RUN_IO/test*
+RUN_IO
 DEBUG
 OUTPUT
 *.d

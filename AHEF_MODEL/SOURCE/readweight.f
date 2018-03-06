@@ -3,17 +3,17 @@ C=====================================================================
 C=====================================================================
 C   Read age weighting function
 C=====================================================================
-
+      IMPLICIT NONE
 C$DEBUG: 'D'
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
+      INCLUDE 'exposure.fi'
 c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
 c     +countyAHEF\miniruns\run group 1\global.fi'
-      INCLUDE 'exposure.fi'
 
       CHARACTER*12 filename
-      LOGICAL eof
+!      LOGICAL eof
       INTEGER row, col, idummy
 
 !      OPEN(iunit, file = filename, Defaultfile=
@@ -22,13 +22,14 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
 !     +,status = 'OLD', err = 1060)
 
       OPEN(iunit, file = filename,status = 'OLD', err = 1060)
-      WRITE(errfile,*) 'Reading WEIGHTS'
+      WRITE(errfile,*) 'Reading WEIGHTS ',filename
+      WRITE(*,*)       'Reading WEIGHTS ',filename
 
       CALL skip( iunit, eof )
       DO row = 1, maxages
-        READ(iunit, 100, err=1070) idummy,
+        READ(iunit,100,err=1070) idummy,
      +                           (weights(row,col), col=1, maxages)
-        WRITE(errfile,100) idummy, (weights(row,col), col=1, maxages)
+        WRITE(errfile,100) idummy,(weights(row,col), col=1, maxages)
 100     FORMAT(i3,100(:,2x,f5.1))
       ENDDO
 

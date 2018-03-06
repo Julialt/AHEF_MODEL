@@ -11,7 +11,7 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
 
       INCLUDE 'effects.fi'
 
-      LOGICAL eof
+!      LOGICAL eof
       INTEGER agelp, lastage, age
 
       OPEN(iunit, file = agename, status = 'OLD', err = 1140)

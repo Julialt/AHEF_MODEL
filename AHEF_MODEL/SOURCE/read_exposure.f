@@ -3,6 +3,7 @@ C=====================================================================
 C=====================================================================
 C  Subroutine to read exposure file
 C=====================================================================
+      IMPLICIT NONE
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
@@ -11,7 +12,7 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
 
       INCLUDE 'effects.fi'
 
-      LOGICAL eof
+!      LOGICAL eof
       CHARACTER*8 indexname, indextmp
 
       WRITE (errfile, *) 'Reading Exposure'
