@@ -50,8 +50,8 @@ c     +  xagename,expfilename
       WRITE(ounit,'(a)')'*'
 
       WRITE(ounit,100)'Measure:   >',indexname,'<'
-      WRITE(ounit,101)'Min Cohort:  >',colo_year,'<'
-c      WRITE(ounit, 102)'Latitudes:    >',numlats,'<'
+      !WRITE(ounit,101)'Latitudes:  >',numlats,'<'
+      WRITE(ounit,102)'Min Cohort:  >',colo_year,'<'
       WRITE(ounit,103)'Max Cohort:  >',cohi_year,'<'
 
 ! loop over counties: write county header
@@ -86,8 +86,8 @@ c      WRITE(ounit, 102)'Latitudes:    >',numlats,'<'
       RETURN
 
 100   FORMAT(t4,a,a8,a)
-101   FORMAT(t8,a,i4,a)
-102   FORMAT(t4,a,i2,a)
+101   FORMAT(t4,a,i2,a)
+102   FORMAT(t8,a,i4,a)
 103   FORMAT(t11,a,i4,a)
 104   FORMAT(t4,a,t18,i5,a)
 110   FORMAT(a4,t12,100(:,i2.2,'-',i2.2,7x))

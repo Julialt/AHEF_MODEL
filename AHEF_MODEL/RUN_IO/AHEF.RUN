@@ -7,10 +7,10 @@
 *                        ===   ===   ===   ===
                          EMI   OZN   EXP   EFF
 *                        ===   ===   ===   ===      Run File Extensions:
-*   INPUT      OUTPUT
+*  O3 INPUT    OUTPUT
 *  FILENAME   FILENAME   Read/Write Data File?   ATM_RUN  EXP_RUN  EFF_RUN
 *  ========   ========   >=<   >=<   >=<   >=<     ===      ===      ===
-*  CALIBRAT                     X     X            STD      CAL      STD
+*   CALIBRAT                     X     X            STD      CAL      STD
 *   NOCNTL     RUN_TEST          X     X     X      STD      STD      STD
 *   MP1987     RUN_TEST          X     X     X      STD      STD      STD
 *   MA98O2     RUN_TEST          X     X     X      STD      STD      STD
@@ -25,4 +25,3 @@
 *   WMO_BL     RUN_TEST          X     X     X      STD      STD      STD 
 * 
 *  ========   ========   >=<   >=<   >=<   >=<     ===      ===      ===
-

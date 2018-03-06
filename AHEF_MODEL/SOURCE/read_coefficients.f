@@ -11,7 +11,7 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
 
       INCLUDE 'effects.fi'
 
-      LOGICAL eof
+!      LOGICAL eof
       INTEGER ilp
 
       OPEN(iunit, file = coeffname, status = 'OLD', err = 1110)

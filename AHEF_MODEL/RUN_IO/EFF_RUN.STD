@@ -1,6 +1,7 @@
 *========================================================================
 *  EFF_TRY.STD
 *  Runfile for Effects model
+*  Lines beginning with '*' are comments
 *========================================================================
 *                 ========            ====    ====
     Population:   popcy_g1    Output: 1950 to 2150 (years/cohorts)
@@ -27,4 +28,3 @@
 *   Cohort Risk:  Relative risk by cohort
 *   Coefficients: Parameterization from calibration run
 *========================================================================
-

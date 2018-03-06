@@ -3,14 +3,16 @@ C=====================================================================
 C=====================================================================
 C  Subroutine to read exposure by age file
 C=====================================================================
+      IMPLICIT NONE
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
-c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
       INCLUDE 'effects.fi'
 
-      LOGICAL eof
+c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
+c     +countyAHEF\miniruns\run group 1\global.fi'
+
+!      LOGICAL eof
       CHARACTER*8 indexname, indextmp
 
       WRITE (errfile, *) 'Reading Exposure'

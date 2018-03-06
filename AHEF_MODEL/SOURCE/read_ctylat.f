@@ -11,14 +11,13 @@ C===============================================================================
       INCLUDE 'exposure.fi'
       INCLUDE 'setup.h'
 
-      integer icty
       CHARACTER*(*) filename
 c
 c
       WRITE(errfile,*) "Reading ctyfip file ",filename
       OPEN(unit=67,file=dir_io//filename, status="old")
 c
-      CALL skip(67, eof )
+      CALL skip(67,eof)
 c
       icty = 0
       DO icty = 1, maxcty  ! or while not end of file
@@ -33,13 +32,13 @@ c FOR ONE COUNTY RUN
 !        CYCLE
 !      ENDIF
 c          
- 188      FORMAT(I5,1x,f9.6)
-c
       ENDDO
 
  999  CLOSE (67)
 c
       RETURN 
+
+ 188  FORMAT(I5,1x,f9.6)
 
       END SUBROUTINE read_ctylat
             

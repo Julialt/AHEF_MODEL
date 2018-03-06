@@ -73,7 +73,7 @@ c
 c MRLM added IF statement below 11/2014 - WMO files from 2013 are below 100
             IF (dobunit<100) dobunit = 100
 
-! Find row, assuming lookup table goes from 100 to 600 DU step 10
+! Find row, assuming irradiance lookup table goes from 100 to 600 DU step 10
             row = dobunit/10.0 - 9.0          
 c
 cc      WRITE (917,*)'iyear, imonth,dobunit = ',iyear,imonth,dobunit
@@ -117,9 +117,6 @@ c      WRITE(*,*)'checks',r1,c1,c2
 !                temp2 = lookup(r2,c1)+ 
 !     &                 (lookup(r2,c2)-lookup(r2,c1)) * (col-c1)
 
-!                temp1 = 1
-!                temp2 = 1
-
 !                daily = daily+temp1 +(temp2-temp1) * (row-r1)
 c
 cc            WRITE(917,*)'daily = ',temp1 + (temp2 - temp1) * (row - r1),daily
@@ -138,18 +135,18 @@ c
 
 ! Interpolate and increment
                  dailyincr = 
-     &                   (dcol)   *(drow)   *lookup(c2,r2)+
-     &                   (1.-dcol)*(drow)   *lookup(c1,r2)+
-     &                   (dcol)   *(1.-drow)*lookup(c2,r1)+
-     &                   (1.-dcol)*(1.-drow)*lookup(c1,r1)
+     &                   (dcol)   *(drow)   *lookup(r2,c2)+
+     &                   (1.-dcol)*(drow)   *lookup(r2,c1)+
+     &                   (dcol)   *(1.-drow)*lookup(r1,c2)+
+     &                   (1.-dcol)*(1.-drow)*lookup(r1,c1)
 
                  daily=daily+dailyincr
 
 ! Values for checking
-                 lookup1=AMIN1(lookup(c1,r1),lookup(c2,r1),
-     &                         lookup(c1,r2),lookup(c2,r2))
-                 lookup2=AMAX1(lookup(c1,r1),lookup(c2,r1),
-     &                         lookup(c1,r2),lookup(c2,r2))
+                 lookup1=AMIN1(lookup(r1,c1),lookup(r2,c1),
+     &                         lookup(r1,c2),lookup(r2,c2))
+                 lookup2=AMAX1(lookup(r1,c1),lookup(r2,c1),
+     &                         lookup(r1,c2),lookup(r2,c2))
 
                  !WRITE(*,*)dobunit,czen,lookup1,dailyincr,lookup2,daily
                  !WRITE(*,*)dobunit,czen,dailyincr
