@@ -1,0 +1,49 @@
+C=====================================================================
+C     effects.fi
+C=====================================================================
+C  Definition of common blocks for EFFECTS MODULE
+C=====================================================================
+c changes all maxcty to numcty for memory!
+      REAL lats(maxlats)
+C     REAL expos (maxcohorts, maxages, maxlats)
+C     REAL exposbl (maxcohorts, maxages, maxlats)
+      REAL expage (maxcohorts, topage+4, numcty)
+      REAL expagebl (maxcohorts, topage+4, numcty)
+      REAL coeff (maxpops,5)
+      REAL cohort_risk(maxcohorts)
+      REAL age_coeffs(maxages)
+C     REAL incid (maxcohorts, maxages, maxlats, maxpops)
+C     REAL incid2 (maxcohorts, maxages, maxlats, maxpops)
+      REAL incid_bl (maxcohorts, maxages, maxlats, maxpops)
+      REAL incage_bl (maxcohorts, topage, maxlats, maxpops)
+C     REAL incage2 (maxcohorts, topage, maxlats, maxpops)
+      INTEGER pop (minyear:maxyear, maxages, numcty, maxpops)
+      REAL casesa (2100+topage+4-1887, numcty, maxpops)
+      REAL caseca (maxcohorts, topage+4, numcty, maxpops)
+      REAL casesab (2100+topage+4-1887, numcty, maxpops)
+      REAL casecab (maxcohorts, topage+4, numcty, maxpops)
+C     REAL cases (minyear:maxyear, maxages, maxlats, maxpops)
+      REAL total (minyear:maxyear, maxeps)
+      REAL baf (maxpops)
+      CHARACTER*12 endpoint, index
+      CHARACTER*12 agename, cohortname, coeffname, popseg
+      INTEGER numreg, colo, cohi, colo_year, cohi_year
+      INTEGER poplo, pophi, outputlo, outputhi
+      INTEGER popmaxyr, popminyr, yrstep
+c
+      INTEGER cty(numcty)
+
+      COMMON /effect/ cty
+      COMMON /effect/ lats, incid_bl
+      COMMON /effect/ expage, expagebl, incage2, incage_bl
+      COMMON /effect/ pop, coeff, total, age_coeffs
+C     COMMON /effect/ expos, exposbl, incid, incid2, cases
+      COMMON /effect/ casesa, caseca, casecab, casesab
+      COMMON /effect/ cohort_risk, baf
+      COMMON /effect/ endpoint, index, agename, cohortname, coeffname
+      COMMON /effect/ popseg
+      COMMON /effect/ numreg, colo, cohi, colo_year, cohi_year
+      COMMON /effect/ poplo, pophi, outputlo, outputhi
+      COMMON /effect/ popmaxyr, popminyr, yrstep
+
+

@@ -1,0 +1,30 @@
+*========================================================================
+*  EFF_TRY.STD
+*  Runfile for Effects model
+*========================================================================
+*                 ========            ====    ====
+    Population:   popcy_g1    Output: 1950 to 2150 (years/cohorts)
+*     (*.POP)     ========            ====    ====
+*
+    Results by Year? >X<  (else by cohort)
+    Results by Age?  > <  (else total only)
+*
+*   Endpoint                   Age Coeff's   Cohort Risks  Coefficients
+*   Name           Index         *.AGE         *.COH         *.COE       DRtype
+*  >========<    >========<    >========<    >========<    >========<    >====<
+    CATARACT      CATARACT      DUMMY         DUMMY         DUMMY         CMYR
+    MELAINC       MELANOMA      SPL           SPL           MELAN_FT      CMYR
+    MELAMORT      MELANOMA      SPL           SPL           MELAN_FT      CMYR
+    NMSCMORT      NMSC          DUMMY         DUMMY         DUMMY         CMYR
+*   MELA_FHN      MELANOMA      SPL           SPL           MELAN_FT      CMYR
+*   MELA_TLE      MELANOMA      SPL           SPL           MELAN_FT      CMYR
+    BASAL         NMSC          DUMMY         DUMMY         DUMMY         CMYR
+    SQUAMOUS      NMSC          DUMMY         DUMMY         DUMMY         CMYR
+*  >========<    >========<    >========<    >========<    >========<    >====<
+*
+*========================================================================
+*   Index:        Output from exposure model
+*   Cohort Risk:  Relative risk by cohort
+*   Coefficients: Parameterization from calibration run
+*========================================================================
+

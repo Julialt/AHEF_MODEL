@@ -1,0 +1,12 @@
+File AHEF/README
+Do development in directory AHEF_MODEL: contains
+- directory SOURCE (containing model source code)
+
+
+Directory AHEF_Model_unzipped contains
+- original downloaded code
+- a repository of results from old ICF runs
+- source code is not in AHEF_Model_unzipped/. but AHEF_Model_unzipped/RUN_GROUP_n/source
+
+
+
