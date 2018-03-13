@@ -19,7 +19,7 @@ c changes all maxcty to numcty for memory!
       REAL total (minyear:maxyear, maxeps)
       REAL baf (maxpops)
 
-      CHARACTER*12 endpoint, index
+      CHARACTER*12 endpoint, ind
       CHARACTER*12 agename, cohortname, coeffname, popseg
 
       INTEGER numreg, colo, cohi, colo_year, cohi_year
@@ -42,7 +42,7 @@ C     REAL cases (minyear:maxyear, maxages, maxlats, maxpops)
       COMMON /effect/ pop, coeff, total, age_coeffs
       COMMON /effect/ casesa, caseca, casecab, casesab
       COMMON /effect/ cohort_risk, baf
-      COMMON /effect/ endpoint, index, agename, cohortname, coeffname
+      COMMON /effect/ endpoint, ind, agename, cohortname, coeffname
       COMMON /effect/ popseg
       COMMON /effect/ numreg, colo, cohi, colo_year, cohi_year
       COMMON /effect/ poplo, pophi, outputlo, outputhi

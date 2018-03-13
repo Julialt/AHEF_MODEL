@@ -6,14 +6,11 @@ c=====================================================================
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
-c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
-
       INCLUDE 'effects.fi'
 
       REAL value, lastvalue
-!      LOGICAL eof
       INTEGER yrlp, lastyear, year
+!----------------------------------------------------
 
       OPEN(iunit, file = cohortname, status = 'OLD', err = 1120)
       WRITE(errfile,*) 'Reading Cohort Risks'

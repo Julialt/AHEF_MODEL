@@ -19,7 +19,6 @@ C=====================================================================
       REAL row,col
       CHARACTER*8  indexname
       CHARACTER*12 lookupname, weightname
-!      LOGICAL eof, peakflag, first
       LOGICAL peakflag, first
 
 !---------------------------------------------------------------
@@ -32,10 +31,6 @@ C=====================================================================
       WRITE(*,*)' ozone filename = ',oznname
 
       OPEN(exprun,file=dir_io//exprunname,status='OLD',err=1050)
-
-C      Defaultfile=
-C     +      'C:\Documents and Settings\18959\Desktop\AHEF
-C     +\countyAHEF\miniruns\input DATA\',
 
       WRITE(errfile,*) 'Reading exposure runfile ',exprunname
       WRITE(*,*) 'Reading exposure runfile ',exprunname
@@ -51,23 +46,14 @@ C     +\countyAHEF\miniruns\input DATA\',
       first = .true.
 
 !==========================================================
-! loop through all requested  UV indices
+! loop through all requested UV response functions
 !==========================================================
-      DO WHILE (.NOT. eof)
+      DO WHILE (.NOT.eof)
 
-! DEBUG !
-        IF(EOF) THEN
-          WRITE(*,*)"FOUND EOF CONDITION : EXITING READ LOOP!!!"
-          EXIT
-        ENDIF
-! END DEBUG !
-
-        CALL skip(exprun,eof)
         READ(exprun,100,err=1070 )
      +              indexname,lookupname,minmon,maxmon,weightname,drtype
         WRITE(errfile,100) 
      +              indexname,lookupname,minmon,maxmon,weightname,drtype
-        CALL skip(exprun,eof)
 
 ! 'tn' means "skip to column n"
 100     FORMAT(t5,a8,t19,a8,t33,i2,t39,i2,t48,a8,5x,a4)
@@ -110,12 +96,12 @@ C=====================================================================
           WRITE(*,*) '..........................................'
           SELECT CASE (i)
             CASE (1)
-              WRITE(*,*)'Reading and calculating projection exposure'
+              !WRITE(*,*)'Reading and calculating projection exposure'
               expblflag = .false.
               CALL readozone(oznname)
 
             CASE (2)
-              WRITE(*,*)'Reading and calculating baseline exposure'
+              !WRITE(*,*)'Reading and calculating baseline exposure'
               expblflag = .true.
               CALL readozone('BASELINE.OZN')
 
@@ -125,14 +111,18 @@ C=====================================================================
 
           CALL calc_irradiance
 
+! --------------------------------------------------
+! THIS SECTION CALCULATES AND WRITES EITHER BY AGE OR BY COHORT
+! IDEA ! could have a flag in input file to select age or cohort
 ! SUBROUTINE calc_exposure_by_cohort is in dummy.f
-C       CALL calc_exposure_by_cohort
-
+! ... by age ...
           CALL calc_exposure_by_age
-
-C         CALL writeexpos(indexname,first)
           CALL writexage(indexname,first)
 
+! ... by cohort ...
+C          CALL calc_exposure_by_cohort
+C          CALL writeexpos(indexname,first)
+! --------------------------------------------------
 C         IF (?diag?) THEN                 
 c           CALL writeirrad                
 C         ENDIF
@@ -140,6 +130,8 @@ C         ENDIF
         ENDDO ! i=1,2
 
         first = .false.
+
+        CALL skip(exprun,eof)
 
       ENDDO ! WHILE (.NOT. eof)
 

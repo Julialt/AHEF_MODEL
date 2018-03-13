@@ -23,7 +23,6 @@ c
       DO icty = 1, maxcty  ! or while not end of file
         !READ(67,188)cty_fip(icty),cty_lat(icty)
         READ(67,*,end=999) cty_fip(icty),cty_lat(icty)
-        CALL skip(67, eof )
 
 c FOR ONE COUNTY RUN
 !      IF (cty_fip(icty).EQ.1001) THEN
@@ -32,8 +31,10 @@ c FOR ONE COUNTY RUN
 !        CYCLE
 !      ENDIF
 c          
+! numcty now hardwired in global.fi.  IS THAT APPROPRIATE?
+!        numcty = icty
       ENDDO
-
+ 
  999  CLOSE (67)
 c
       RETURN 

@@ -6,13 +6,10 @@ C=====================================================================
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
-c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
-
       INCLUDE 'effects.fi'
 
-!      LOGICAL eof
       INTEGER ilp
+!---------------------------------------------------
 
       OPEN(iunit, file = coeffname, status = 'OLD', err = 1110)
       WRITE(errfile,*) 'Reading Coefficients'

@@ -21,7 +21,7 @@ c      REAL expos_agebl(maxcohorts, topage+4, maxcty)
       REAL expos_age(maxcohorts, topage+4, numcty)
       REAL expos_agebl(maxcohorts, topage+4, numcty)
 
-      LOGICAL expblflag
+!      LOGICAL expblflag
 
       COMMON /expos/ minmon, maxmon, measures
       COMMON /expos/ lats, dobson, yrhi, yrlo
@@ -29,5 +29,5 @@ c      REAL expos_agebl(maxcohorts, topage+4, maxcty)
 C     COMMON /expos/ expos_out, expos_outbl
       COMMON /expos/ expos_age, expos_agebl
       COMMON /expos/ colo, cohi, colo_year, cohi_year
-      COMMON /expos/ expblflag
+!      COMMON /expos/ expblflag
 

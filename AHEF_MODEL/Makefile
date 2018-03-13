@@ -1,5 +1,4 @@
-.SUFFIXES:
-.SUFFIXES : .f .fi .h .o .d .a .mod
+.SUFFIXES: .f .fi .h .o .d .a .mod
 #---------------------------------------------
 # declaration of definitions (macros)
 
@@ -85,3 +84,4 @@ AHEF : $(OBJDIR)/aheflib.a $(MAINDIR)/$(MAIN_SOURCE)
 
 clean :
 	rm -f $(OBJDIR)/*
+	rm -f $(OBJDIR)/*.o

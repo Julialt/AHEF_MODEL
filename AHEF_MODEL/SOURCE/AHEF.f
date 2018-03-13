@@ -14,7 +14,7 @@ C=====================================================================
 C PURPOSE OF THIS PROGRAM UNIT:
 C     - read run file AHEF.RUN
 C     - extract names of input files
-C     - extract flags for siumlation type
+C     - extract flags for simulation type
 C     - based on flags, call exposure or effects subroutine
 C     - pass file names to subroutines
 C
@@ -64,18 +64,19 @@ C
 C LOGICAL VARIABLES:
 C    errflag initialised T, enabling CALL effects or exposure
 C    following are readin fields from AHEF.RUN : set input filenames
-C    emiflag T IF (temp1 .ne. ' ') THEN -> CALL solomon
-C    oznflag T IF (temp2 .ne. ' ') THEN -> set o3 filename
-C    expflag T IF (temp3 .ne. ' ') THEN -> set endpoint = 2
-C    effflag T IF (temp4 .ne. ' ') THEN -> reset endpoint = 3
-C    endpoint = 2 -> exposure only; = 3 -> also effects
-C    returned T if we came back from Solomon
+C    emiflag = T IF (temp1 .ne. ' ') THEN -> CALL solomon
+C    oznflag = T IF (temp2 .ne. ' ') THEN -> set o3 filename
+C    expflag = T IF (temp3 .ne. ' ') THEN -> set modules = 2
+C    effflag = T IF (temp4 .ne. ' ') THEN -> reset modules = 3
+C    returned = T if we came back from Solomon
 C             (enables bypassing atmos model)
 C
 C INTEGER VARIABLES:
 C    i = 1,12
 C    flagcount = # of TRUE flags
 C    runcount  = # of requested runs
+C    modules = 2 -> exposure only; = 3 -> also effects
+C    ...formerly designated "endpoint" but that caused a type conflict
 C
 C REAL VARIABLES:
 C    (none)
@@ -85,14 +86,11 @@ C=====================================================================
 
       IMPLICIT NONE
 
-C$DEBUG: 'D'
-
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
       INCLUDE 'setup.h'
 
-      INTEGER flagcount, endpoint
-!      LOGICAL eof
+      INTEGER flagcount, modules
 
       CHARACTER*1 temp1,temp2,temp3,temp4
       CHARACTER*3 emi_ext, ozn_ext, exp_ext, eff_ext
@@ -126,16 +124,19 @@ C=====================================================================
 C      OPEN(runfile,FILE=dir_io//'AHEF.RUN',status = 'OLD')
 
       CALL skip( runfile, eof )
+
+! read file extensions : table header line from file AHEF.RUN
       READ(runfile,100,err=1070) emi_ext, ozn_ext, exp_ext, eff_ext
       WRITE(errfile,100)         emi_ext, ozn_ext, exp_ext, eff_ext
 
 100   FORMAT(t26,4(a3,3x))
 
       CALL skip(runfile,eof)
-      runcount = 0
 
+      runcount = 0
+      
 C=====================================================================
-C  Loop over specified runs
+C  Loop over runs specified in AHEF.RUN
 C=====================================================================
 
       DO WHILE (.NOT. eof)
@@ -185,7 +186,7 @@ C=====================================================================
         IF (temp2 .ne. ' ') THEN
             oznflag = .true.
             flagcount = flagcount + 1
-            endpoint = 1
+            modules = 1
             IF (outname .ne. '        ') name = outname
         ELSE
             oznflag = .false.
@@ -193,15 +194,15 @@ C=====================================================================
         ENDIF
         WRITE(*,*)oznname
 
-        expname = name(1:len_trim(name))//'.'//exp_ext
-        expblname = name(1:len_trim(name))//'.'//'XBL'    ! Baseline
-        xageblname = name(1:len_trim(name))//'.'//'XBA'   ! BL age
-        xagename = name(1:len_trim(name))//'.'//'XSA'     ! SC age
+        expname = name(1:len_trim(name))//'.'//exp_ext    ! Exposure
+        expblname = name(1:len_trim(name))//'.'//'XBL'    ! Baseline exposure
+        xagename = name(1:len_trim(name))//'.'//'XSA'     ! SC expos by age 
+        xageblname = name(1:len_trim(name))//'.'//'XBA'   ! BL expos by age
 
         IF (temp3 .ne. ' ') THEN
             expflag = .true.
             flagcount = flagcount + 1
-            endpoint = 2
+            modules = 2
             IF (outname .ne. '        ') name = outname
         ELSE
             expflag = .false.
@@ -209,11 +210,11 @@ C=====================================================================
         ENDIF
 
         effname = name(1:len_trim(name))//'.'//eff_ext
-        effagename = name(1:len_trim(name))//'.'//'efa' ! age spec file
+        !effagename = name(1:len_trim(name))//'.'//'EFA' ! age spec file
         IF (temp4 .ne. ' ') THEN
             effflag = .true.
             flagcount = flagcount + 1
-            endpoint = 3
+            modules = 3
         ELSE
             effflag = .false.
         ENDIF
@@ -232,13 +233,14 @@ C=====================================================================
           returned = .true.
         ENDIF
 
-        IF (( endpoint .ge. 2      )  .and.
-     +      ( oznflag .or. returned)  .and.
+        IF (( modules .GE. 2      )  .and.
+     +      ( oznflag .OR. returned)  .and.
      +      ( .NOT. errflag        )) THEN
           CALL exposure
+!           WRITE(*,*) "bypassing exposure module for DEBUG"
         ENDIF
 c
-       IF (( endpoint .eq. 3 )  .and.
+       IF (( modules .EQ. 3 )  .and.
      +      ( .NOT. errflag   )) THEN
          CALL effects
         ENDIF

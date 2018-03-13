@@ -1,35 +1,37 @@
-C=====================================================================
-      SUBROUTINE EFFECTS
+!C=====================================================================
+      SUBROUTINE effects
 C=====================================================================
 C   This subroutine contains the effects model.
 C   Input:    exposure by cohort,age,latitude,measure
 C   Output:   cases by year,measure
-C   ModIFied to compute incidence for scenarios using BAFs and baseline
+C   Modified to compute incidence for scenarios using BAFs and baseline
 C   incidence
 C=====================================================================
-c      IMPLICIT NONE
+      IMPLICIT NONE
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
-c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
       INCLUDE 'effects.fi'
+      INCLUDE 'setup.h'
+!---------------------------------------------------------------
 
-!      LOGICAL eof, first, byyear, byage
       LOGICAL first, byyear, byage
       INTEGER count,yrlplo,yrlphi,coh1,coh2,iy,iageg
       INTEGER cohyrtmp,colotmp,cohitmp,ilattmp
       INTEGER rlat
       CHARACTER*12 age_pfn, cohort_pfn, coeff_pfn, popname
-      CHARACTER*12 endpttmp
       CHARACTER*3  baftype
       CHARACTER*4  drtmp
       CHARACTER*23  text
       CHARACTER*23  tempchar
       REAL coh_wght,tmp1,tmp2,wtd_incid, cmflag
       REAL expwgt(maxages*step)
-      INTEGER year, poptmp
+      REAL expbase,expscen
+      INTEGER year,poptmp,iageall
+      INTEGER i,ii,icomp,ic,iwrite,itmp,imatch,imatch2,ictymatch,tmp
 c
+      REAL::  t1,t2,tca,tcb
+
       REAL st_tot_base(15,maxpops)  ! by 15 state, 4 pop
       REAL st_tot_scen(15,maxpops)
       REAL st_tot_dIFf(15,maxpops)
@@ -40,48 +42,71 @@ c
       REAL st_tot_s(15)
       REAL st_tot_d(15)
 c 
-      REAL ct_tot_diff_l(numcty), ct_tot_diff_d(numcty)
+!      REAL ct_tot_diff_l(numcty), ct_tot_diff_d(numcty)
+      REAL ct_tot_diff_l(maxcty), ct_tot_diff_d(maxcty)
 c
       INTEGER group1(15)
 c      DATA group1 /1,5,12,22,28,29,40/
       DATA group1 /9,10,11,23,24,25,33,34,36,39,42,44,50,51,54/
       INTEGER ireg  ! total number of states for casest counter
-c
+
+      CHARACTER(10) adummy
+      CHARACTER(20) bdummy
+      CHARACTER(8) endpttmp
+      CHARACTER(8) runname
+      CHARACTER(1) c1,c2,c3,c4,c5,c6,c7,c8
+!---------------------------------------------------------------
+
+      WRITE (*,*) 'Running effects model . . . .'
+
+! INITIALIZE SOME QUANTITIES
+
       ireg = 15
-c
       count = 1
-      cases = 0
       total = 0
       numreg = 3
       first = .true.
 cc      mrlm - debug
 cc      WRITE(*,*)'debug ',expage(2,3,1)
+
       WRITE(*,*)'**************  lats(1) = ',lats(1)
 c
-      WRITE (*,1)
-1     FORMAT ('+','Running effects model  . . . .')
+! OPEN RESULTS FILES FROM EXPOSURE MODULE 
+! IDEA ! case switches for which kind of input is available
 
-      OPEN(scratch, file = expname)     ! open exposure file
+! ... by cohort ...
+! open exposure file *.EXP
+!      OPEN(scratch,file=dir_io//expname)     
+!      WRITE(*,*)'exposure file = ',expname
 
-      OPEN(scratchbl, file = expblname) ! open baseline exposure file
+! open baseline exposure file *.XBL
+!      OPEN(scratchbl,file=dir_io//expblname) 
+!      WRITE(*,*)'baseline exposure file = ',expblname
 
-      OPEN(scratchage, file = xagename)     ! open age exposure file
+! ... by age ...
+! open age exposure file *.XSA
+      OPEN(scratchage,file=dir_io//xagename)     
+      WRITE(*,*)'age exposure file = ',xagename
 
-      OPEN(scratchagebl, file = xageblname) ! open baseline age exposure file
+! open baseline age exposure file *.XBA
+      OPEN(scratchagebl,file=dir_io//xageblname) 
+      WRITE(*,*)'baseline age exposure file = ',xageblname
 
-cc      mrlm debug 10/2008
-      WRITE(*,*)'exposure file = ',expname
-      WRITE(*,*)'baseline exposure file = ',expblname
-      WRITE(*,*)'age exposure file =',xagename
-      WRITE(*,*)'baseline age exposure file =',xageblname
-      WRITE(*,*)'effagename = ',effagename
+! output file  for effective aggregate age is opened in
+! write_eff_agg_age.f
+!      WRITE(*,*)'effagename = ',effagename
 
-      OPEN(effrun, file = effrunname, status = 'OLD', err = 1080)
+! OPEN & READ EFFECTS RUN SETUP FILE
+
+      OPEN(effrun,file=dir_io//effrunname,status='OLD',err=1080)
       WRITE (errfile,*) 'Reading effects runfile'
+      WRITE (*,*) 'Reading effects runfile ',effrunname
 
       CALL skip(effrun, eof)
-      READ( effrun, 100 ) popname, outputlo, outputhi 
+!      READ( effrun, 100 ) popname, outputlo, outputhi 
 100   FORMAT(t19,a8,t39,i4,t47,i4)
+      READ( effrun, 103 ) runname,popname, outputlo, outputhi 
+103   FORMAT(t5,a8,t19,a8,t39,i4,t47,i4)
 
       CALL skip(effrun, eof)
       READ( effrun, 101 ) text,tempchar
@@ -105,27 +130,26 @@ cc      mrlm debug 10/2008
 
 101   FORMAT(a23,a1)
 
-      WRITE (*,*) 'Reading population...'
-C MRLM  10/2008 debug
-      WRITE(*,*)' population file is:',popname
+!      WRITE(*,*)'Reading population...'
 
-      CALL read_population(popname)
-
+      CALL read_population(dir_io//TRIM(runname)//'/'//popname)
       IF (errflag) GOTO 999
 
-      WRITE (*,*) 'Returned from read_pop...'
+      !WRITE (*,*) 'Returned from read_pop...'
 
 C**  Write population to an output file **
 c
-            WRITE(*,*)'numcty = ',numcty
+      WRITE(*,*)'numcty = ',numcty
 c
-      OPEN(o1unit, file='popout.txt')
+      OPEN(o1unit, file=dir_io//'popout.txt')
 
-        DO year = 1985, 2025
-          DO ipop = 1, maxpops
-            poptmp=0
-            DO iage=1, maxages
-               DO icty = 1, numcty
+! JMLT IDEA: feed in desired output year range from input file
+
+      DO year = 1985, 2025
+        DO ipop = 1, maxpops
+          poptmp=0
+          DO iage=1, maxages
+            DO icty = 1, numcty
               poptmp = poptmp + pop(year,iage,icty,ipop)
 c mlrm debug between codes - ---------
 c            IF ((icty.EQ.1).AND.(ipop.EQ.1).AND.(year.EQ.2005)) THEN
@@ -134,7 +158,7 @@ c            WRITE(99,*)' pop = ',pop(year,iage,icty,ipop),'  ',poptmp
 c            ENDIF
 c--------------------------------------
             ENDDO ! icty
-             ENDDO ! iage
+          ENDDO ! iage
           WRITE(o1unit,125) year,poptmp
         ENDDO ! ipop
       ENDDO ! year
@@ -148,10 +172,10 @@ c
       CALL skip(effrun, eof)
 
       DO WHILE (.NOT. eof)
-        READ( effrun, 200 ) endpoint,index,age_pfn,cohort_pfn,coeff_pfn,
-     +          drtype
-        WRITE(errfile, 200 ) endpoint,index,age_pfn,cohort_pfn,
-     +          coeff_pfn,drtype
+        READ( effrun, 200 ) endpoint,ind,age_pfn,cohort_pfn,
+     &                      coeff_pfn, drtype
+        WRITE(errfile, 200 ) endpoint,ind,age_pfn,cohort_pfn,
+     &                       coeff_pfn,drtype
 200     FORMAT(t5,a8,t19,a8,t33,a8,t47,a8,t61,a8,t75,a4)
 
         cohortname = cohort_pfn(1:len_trim(cohort_pfn))//'.COH'
@@ -159,9 +183,26 @@ c
         agename  = age_pfn(1:len_trim(age_pfn))//'.AGE'
 
 
-        WRITE (*,*) 'Reading exposure by age...'
-        CALL read_exposure_age(index)
-        CALL read_blexposure_age(index)
+! JMLT: new
+        DO i=1,2
+
+          WRITE(*,*) '..........................................'
+          SELECT CASE (i)
+            CASE (1)
+              WRITE(*,*)'Reading projection exposure'
+              expblflag=.FALSE.
+              CALL read_exposure_age_multi(ind)
+
+            CASE (2)
+              expblflag=.TRUE.
+              WRITE (*,*) 'Reading baseline exposure'
+              CALL read_exposure_age_multi(ind)
+
+          END SELECT
+
+! old
+        !CALL read_exposure_age(ind)
+        !CALL read_blexposure_age(ind)
 
 C=====================================================================
 C  Calculate incidence using BAFs as a percentage change in
@@ -170,111 +211,155 @@ C=====================================================================
 C  Read BAFs
 C=====================================================================
 
-!        OPEN(iunit, FILE = 'BAF.DAT',Defaultfile=
-!     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
-c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
-
-        OPEN(iunit, FILE = 'BAF.DAT')
-        CALL skip(iunit, eof)
+        OPEN(iunit, FILE = dir_dat//'BAF.DAT')
+        WRITE(*,*) "Reading file ", dir_dat//'BAF.DAT'
+        CALL skip(iunit,eof)
 
         READ(iunit, 215) baftype
 215     FORMAT(t26,a3)
-        CALL skip(iunit, eof)
+        CALL skip(iunit,eof)
 
-        WRITE(*,'(a8,t9,a4)') 'drtype=', drtype
-        WRITE(*,'(a10,t12,a12)') 'endpoint=', endpoint
+        WRITE(*,*) 'drtype   = ', drtype
+        WRITE(*,*) 'endpoint = ', endpoint
 
         DO WHILE (.NOT. eof)
           READ (iunit, 220) endpttmp,drtmp,(baf(ipop), ipop=1,maxpops)
+!220       FORMAT(t3,a12,t17,a4,t28,30(:,f6.4,4x))
+220       FORMAT(t3,a8,t17,a4,t28,30(:,f6.4,4x))
+          CALL skip(iunit,eof)
 
-        WRITE(*,'(a8,t12,a4)') 'drtmp=', drtmp
-        WRITE(*,'(a10,t12,a12)') 'endpttmp=', endpttmp
+          WRITE(*,*) 'drtmp    = ', drtmp
+          WRITE(*,*) 'endpttmp = ', endpttmp
 
-220       FORMAT(t3,a12,t17,a4,t28,30(:,f6.4,4x))
+          IF((endpttmp.EQ.endpoint).AND.(drtmp.EQ.drtype)) EXIT
 
-          IF ((endpttmp .EQ. endpoint) .AND. (drtmp .EQ. drtype))
-     +    GOTO 230
-
-        ENDDO ! WHILE loop
-
-230     CONTINUE
+        ENDDO ! WHILE loop for eof(iunit)
 
         CLOSE(iunit)
+
+      ENDDO ! WHILE loop for eof(effrun)
+
+      WRITE(*,*) ".........................................."
 c
 C=====================================================================
 C  Read Exposure Weights
 C=====================================================================
 
-!        OPEN (iunit,file='expwgts.dat',Defaultfile=
-!     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
-c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
+      OPEN (iunit,file=dir_dat//'EXPWGTS.DAT')
+      WRITE(*,*) "Reading file ",dir_dat//'EXPWGTS.DAT'
+      CALL skip (iunit,eof)
 
-        OPEN (iunit,file='expwgts.dat')
-        CALL skip (iunit, eof)
+      WRITE(*,*) 'endpoint = ', endpoint 
 
-        DO WHILE (.NOT. eof)
+      DO WHILE (.NOT.eof)
 
-          READ (iunit, 240)  endpttmp
+        endpttmp=" "
 
-240     FORMAT (t3,a12)
+!        READ (iunit,240)  endpttmp
+!240     FORMAT (t3,a8)
+!        CALL skip (iunit,eof)
 
-          READ (iunit, 250) (expwgt(iagey), iagey=1, maxages*step)
-          CALL skip (iunit, eof)
+! JMLT ! 
+! Length of read-in field and # of leading blanks is unknown.
+! This format finds the emd-of-line character so we can parse the input.
+        READ(iunit,'(Q,A)') i,bdummy
+        adummy=ADJUSTL(bdummy(1:i-1))
+        i=INDEX(adummy," ")
+        endpttmp(1:i-1) = adummy(1:i-1)
 
+        CALL skip (iunit,eof)
+        DO iagey=1,maxages*step
+          READ (iunit,250) expwgt(iagey)
+        ENDDO ! iagey
 250     FORMAT (t8,f4.2)
+        CALL skip (iunit,eof)
 
-          IF (endpttmp .EQ. endpoint) GOTO 260
+        WRITE(*,*) 'endpttmp = ', (endpttmp) 
 
-        ENDDO !  WHILE loop
+        IF(endpttmp.EQ.endpoint) EXIT
 
-260     CONTINUE
+      ENDDO !  WHILE loop for eof(iunit)
 
-        CLOSE (iunit)
+      CLOSE (iunit)
+
+      WRITE(*,*) ".........................................."
 
 C=====================================================================
 C  Read Baseline Incidence
 C=====================================================================
 
-!        OPEN(iunit, FILE = 'baseinc.txt',Defaultfile=
-!     +'\\tsclient\C\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
-c     +      'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\input data')
+      OPEN(iunit, FILE = dir_dat//'BASEINC.TXT')
+      WRITE(*,*) "Reading file ", dir_dat//'BASEINC.TXT'
+      CALL skip(iunit,eof)
 
-        OPEN(iunit, FILE = 'baseinc.txt')
-        CALL skip( iunit, eof )
+      READ(iunit, 325) colotmp, cohitmp
+325   FORMAT(t47,i4,t55,i4)
+      CALL skip(iunit,eof)
 
-        READ(iunit, 325) colotmp, cohitmp
-        CALL skip( iunit, eof )
+      WRITE(*,*) 'endpoint = ', endpoint 
 
-        DO WHILE (.NOT. eof)
+      DO WHILE (.NOT.eof)
 
-c        DO ilat = 1, numlats
-c        DO ipop = 1, maxpops
-            DO ilat =1,3
-            DO ipop=1,4
+c      DO ilat = 1, numlats
+c      DO ipop = 1, maxpops
+        DO ilat =1,3
+          DO ipop=1,4
 
-          READ(iunit, 330) endpttmp
-          READ(iunit, 332) ilattmp
-          READ(iunit, 334) popseg
-          READ(iunit, 336) adummy   ! Skip a line
+            endpttmp=" "
+            popseg=" "
 
-          IF ((popseg .EQ. 'WH MALE').AND.(ipop .NE. 1)) THEN
-            ! make an error for this
-          ELSE IF ((popseg .EQ. 'WH FEMALE').AND.(ipop .NE. 2)) THEN
-            ! make an error for this
-          ELSE IF ((popseg .EQ. 'NWH MALE').AND.(ipop .NE. 3)) THEN
-            ! make an error for this
-          ELSE IF ((popseg .EQ. 'NWH FEMALE').AND.(ipop .NE. 4)) THEN
-            ! make an error for this
-          ELSE
-            ! make an error for this
-          ENDIF
+!            READ(iunit,330) endpttmp
+!330         FORMAT(t1,a8)
 
-305       READ (iunit, 340) cohyrtmp
+! read in string with unknown length, leading blanks
+            READ(iunit,'(Q,A)') i,bdummy
+            bdummy=ADJUSTL(bdummy(1:i-1))
+            i=INDEX(bdummy," ")
+            endpttmp(1:i-1) = bdummy(1:i-1)
+
+            WRITE(*,*) 'endptmp = ', endpttmp 
+
+            READ(iunit,332) ilattmp
+332         FORMAT(t5,i1)
+            WRITE(*,*) ilattmp
+
+!            READ(iunit,334) popseg
+!334         FORMAT(t1,a12)
+! read in string with unknown length, one integral blank
+            READ(iunit,'(Q,A)') i,bdummy
+            bdummy=ADJUSTL(bdummy(1:i-1))
+            i=INDEX(bdummy," ")
+            ii=INDEX(bdummy(i+1:LEN(bdummy))," ")
+            popseg(1:i+ii-1) = bdummy(1:i+ii-1)
+
+            WRITE(*,*) popseg
+
+            READ(iunit,336) adummy   ! Skip a line
+336         FORMAT(t1,a3)
+
+
+            IF ((popseg .EQ. 'WH MALE').AND.(ipop .NE. 1)) THEN
+              ! make an error for this
+            ELSE IF ((popseg .EQ. 'WH FEMALE').AND.(ipop .NE. 2)) THEN
+              ! make an error for this
+            ELSE IF ((popseg .EQ. 'NWH MALE').AND.(ipop .NE. 3)) THEN
+              ! make an error for this
+            ELSE IF ((popseg .EQ. 'NWH FEMALE').AND.(ipop .NE. 4)) THEN
+              ! make an error for this
+            ELSE
+              ! make an error for this
+            ENDIF
+
+! find first year to read
+305         READ (iunit, 340) cohyrtmp
+340         FORMAT(t1,i4)
             IF (cohyrtmp.LT.colo_year) GOTO 305
 
-              BACKSPACE(iunit)
+            BACKSPACE(iunit)
 
-          DO icohort = colo, ((cohitmp-colo_year)/step)+1
+!... and read all years in target range
+            DO icohort = colo, ((cohitmp-colo_year)/step)+1
+
 C --------------------------------------
 C  Debugging tool
 c               WRITE (*,'(t1,a7,t9,i3,t13,a4,t18,i3)')
@@ -287,28 +372,18 @@ C --------------------------------------
      +              iage=1, maxages)
 
 310           FORMAT(t5,50(:,4x,e8.2))
-312           FORMAT(t5,1p,50(:,4x,e8.2))
 
-          ENDDO ! icohort
-
-        ENDDO ! ipop
+            ENDDO ! icohort
+          ENDDO ! ipop
         ENDDO ! ilat
 
-          IF (endpttmp .EQ. endpoint) GOTO 350
+        IF (endpttmp .EQ. endpoint) EXIT
 
-        ENDDO ! WHILE loop
+      ENDDO ! WHILE loop for eof(iunit)
 
-325       FORMAT(t47,i4,t55,i4)
-330       FORMAT(t1,a8)
-332       FORMAT(t5,i1)
-334       FORMAT(t1,a12)
-336       FORMAT(t1,a3)
-340       FORMAT(t1,i4)
+      CLOSE(iunit)
+      WRITE(*,*) "............................"
 
-
-350     CONTINUE
-c
-        CLOSE(iunit)
 C=====================================================================
 C Print baseline and scenario incidence matrices and the difference between
 C them.
@@ -325,7 +400,8 @@ cc
           DO ipop = 1, 1  ! (Just whm, use maxpops for all ipops)
             DO icohort = colo, cohi
 
-               WRITE (errfile, 500) "lat=", ilat, "pop=", ipop
+               WRITE (errfile, 500)
+     &               "lat=",ilat,"pop=",ipop,"year=",icohort
                WRITE (errfile, 502) (incid_bl(icohort,iage,ilat,ipop),
      +                       iage = 1, maxages)
 
@@ -333,12 +409,12 @@ cc
           ENDDO ! ipop
         ENDDO ! ilat
 
-500    FORMAT (t1,a4,t5,i3,t9,a5,t14,i3)
+500    FORMAT (t1,a4,t5,i3,t9,a4,t14,i3,t20,a5,t26,i4)
 502    FORMAT(t5,1p,50(:,4x,e8.2))
 
-
+! JMLT DONE TO HERE !
 C==========================================================================
-C  Calculate cases using exposure by age inFORMATion
+C  Calculate cases using exposure by age information
 C==========================================================================
 
 C=============================================
@@ -354,13 +430,9 @@ c      WRITE(*,*)'step = ',step
 c
 
         DO ilat = 1, numreg
-
           DO ipop = 1, maxpops
-
             DO icohort = colo, cohi
-
               DO iage = 1, maxages
-
                 DO iy = 1, 5
 
                   iageall = (iage - 1) * step + iy
@@ -377,13 +449,9 @@ c     + incage_bl(icohort,iageall,ilat,ipop)
 c      ENDIF
 c
                 ENDDO ! iy
-
               ENDDO ! iage
-
             ENDDO ! icohort
-
           ENDDO ! ipop
-
         ENDDO ! ilat
 
 C=========================================
@@ -394,8 +462,8 @@ cc      WRITE(errfile,*)' ****************************************'
 c
         DO icohort = colo, cohi
 
-        WRITE (errfile,601) icohort, (incage_bl(icohort,iagey,2,1),
-     +                      iagey = 1, maxages * step)
+          WRITE (errfile,601) icohort, 
+     &          (incage_bl(icohort,iagey,2,1),iagey=1,maxages*step)
 
         ENDDO ! icohort
 
@@ -421,16 +489,12 @@ C==================================================================
         caseca=0
         casecab=0
 c
-            DO icty = 1,numcty
-
+        DO icty = 1,numcty
           DO ipop = 1, maxpops
-
             DO icohort = colo, cohi
-
              DO iy = 0, 4
 
                 expbase = 0.0
-
                 expscen = 0.0
 cc
 c                  i get the iagey, i would think iy loop comes into play
@@ -625,7 +689,6 @@ c
       ENDDO
 
           DO ipop=1, maxpops
-
             DO icty = 1,numcty
 
                        icomp = int(cty_fip(icty)/1000)

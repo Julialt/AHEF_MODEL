@@ -55,10 +55,7 @@ c     +  xagename,expfilename
       WRITE(ounit,103)'Max Cohort:  >',cohi_year,'<'
 
 ! loop over counties: write county header
-!      DO icty = 1, numcty
-! DEBUG !
-      DO icty = 1, 5
-! END DEBUG !
+      DO icty = 1, numcty
 
         WRITE(ounit,'(a)') '*'
         WRITE(ounit,104)'County:    >',cty_fip(icty),'<'
@@ -72,7 +69,8 @@ c     +  xagename,expfilename
 
           iyear    = colo_year+(icohort-1)*step
           iageymax = maxages*step+4
-          WRITE(ounit,120)iyear,
+!          WRITE(ounit,120)iyear,    ! old format
+          WRITE(ounit,121)iyear,    ! shorter format
      &         (expos_age(icohort,iagey,icty),iagey=1,iageymax)
 
         ENDDO
@@ -93,6 +91,7 @@ c     +  xagename,expfilename
 110   FORMAT(a4,t12,100(:,i2.2,'-',i2.2,7x))
 111   FORMAT(a,t5,100(:,3x,a9))
 120   FORMAT(i4,t5,100(:,e12.4))
+121   FORMAT(i4,t5,100(:,es12.3))
 
       END SUBROUTINE writexage
 

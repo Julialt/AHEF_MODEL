@@ -6,13 +6,10 @@ c=====================================================================
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
-c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
-
       INCLUDE 'effects.fi'
 
-!      LOGICAL eof
       INTEGER agelp, lastage, age
+!--------------------------------------------------
 
       OPEN(iunit, file = agename, status = 'OLD', err = 1140)
       WRITE(errfile,*) 'Reading Age Coefficients'

@@ -44,6 +44,10 @@ c first read in county/latitude file
 c
       DO icty = 1, numcty
 
+! DEBUG !
+!        PRINT*,"icty = ",icty
+! END DEBUG !
+
 cMRLM for each county, find the latitude
 cJMLT previously approximated with AINT, now REAL
                lat = cty_lat(icty)
@@ -91,7 +95,8 @@ c
             DO itime = 4, 20                   
 
 ! OLD              CALL zenith(lat,imonth,iday,itime,czen)
-              CALL zenith(lat,czen)
+              CALL zenith(lat,czen)  ! NEW
+
 ! DEBUG !
 !              WRITE(*,*)' cos zenith = ',iday,itime,czen
 !              WRITE(*,*)'dobson',iyear,imonth,ilat,dobunit,row
@@ -153,11 +158,14 @@ c
 
               ENDIF ! (czen.GE.0)
 
+! DEBUG OUTPUT !
               IF ((iyear.EQ.1985).AND.(icty.EQ.1).AND.(imonth.EQ.1).AND.
      +            (itime.EQ.12)) THEN
                 WRITE(661,*)iyear,imonth,ilat,icty,cty_lat(icty),
      +                      dobunit,itime,czen,temp1,temp2,daily
               ENDIF ! selected sample point
+! END DEBUG !
+
             ENDDO ! itime
 
             IF ((drtype.EQ."CMPK").OR.(drtype.EQ."ANPK")) THEN

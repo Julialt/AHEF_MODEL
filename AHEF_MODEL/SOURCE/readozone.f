@@ -4,33 +4,25 @@ C=====================================================================
 C  Read Dobson Unit matrix (D.U. for given latitude and month)
 C=====================================================================
       IMPLICIT NONE
-C$DEBUG: 'D'
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
-c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
       INCLUDE 'exposure.fi'
       INCLUDE 'setup.h'
 
       INTEGER i
       REAL,DIMENSION(maxlats) :: dobtmp
-!      LOGICAL eof
 
       CHARACTER*(*) filename
       CHARACTER*52 Defaultfile
       CHARACTER*1  cnlat
       CHARACTER*3  adummy
+!---------------------------------------------
 
       errflag = .false.
 
 C MRLM ozone debugging 10/2008
 cc       WRITE(*,*)'in readozone - filename is:',filename
-C
-!      OPEN(iunit, file = filename, Defaultfile=
-!     +"../INPUT_DATA/BASELINE.OZN"
-!     + ,status = 'OLD', 
-!     + err = 1030)
 
       WRITE(errfile,*) 'Reading ozone : ',filename
       WRITE(6,*)       'Reading ozone : ',filename

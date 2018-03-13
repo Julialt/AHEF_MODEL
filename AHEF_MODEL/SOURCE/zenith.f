@@ -45,6 +45,9 @@ c
 
 * convert to radians
       rlt = lat*dr
+! DEBUG: USING INTEGER LAT VALUES, FOR COMPARISON WITH OLD OUTPUT
+!      rlt = FLOAT(INT(lat))*dr
+! END DEBUG !
 
 * compute current (Julian) day of year IJD = 1 to 365
 !JMLT: Old code
