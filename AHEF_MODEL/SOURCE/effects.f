@@ -172,9 +172,9 @@ c
       CALL skip(effrun, eof)
 
       DO WHILE (.NOT. eof)
-        READ( effrun, 200 ) endpoint,ind,age_pfn,cohort_pfn,
+        READ( effrun, 200 ) endpoint,indname,age_pfn,cohort_pfn,
      &                      coeff_pfn, drtype
-        WRITE(errfile, 200 ) endpoint,ind,age_pfn,cohort_pfn,
+        WRITE(errfile, 200 ) endpoint,indname,age_pfn,cohort_pfn,
      &                       coeff_pfn,drtype
 200     FORMAT(t5,a8,t19,a8,t33,a8,t47,a8,t61,a8,t75,a4)
 
@@ -191,18 +191,18 @@ c
             CASE (1)
               WRITE(*,*)'Reading projection exposure'
               expblflag=.FALSE.
-              CALL read_exposure_age_multi(ind)
+              CALL read_exposure_age(indname)
 
             CASE (2)
               expblflag=.TRUE.
               WRITE (*,*) 'Reading baseline exposure'
-              CALL read_exposure_age_multi(ind)
+              CALL read_exposure_age(indname)
 
           END SELECT
 
-! old
-        !CALL read_exposure_age(ind)
-        !CALL read_blexposure_age(ind)
+! old 
+        !CALL read_exposure_age(indname)
+        !CALL read_blexposure_age(indname)
 
 C=====================================================================
 C  Calculate incidence using BAFs as a percentage change in

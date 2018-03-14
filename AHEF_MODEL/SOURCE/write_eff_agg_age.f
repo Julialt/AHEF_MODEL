@@ -3,6 +3,7 @@ C=====================================================================
 C=====================================================================
 C  Subroutine to write effects output file - for the age routine
 C=====================================================================
+      IMPLICIT NONE
 
       INCLUDE 'files.fi'
       INCLUDE 'global.fi'
@@ -15,9 +16,10 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
       REAL caseout(maxlats)
       REAL caseoutb(maxlats)
       REAL casesan(2100 + topage + 4 - 1887,maxlats,maxpops)
+!----------------------------------------------------------------
 
       IF (first) THEN
-        OPEN(ounit, file = effagename)
+        OPEN(ounit, file=effagename)
       ELSE
         OPEN(ounit, file=effagename, status = 'OLD', access = 'APPEND')
       ENDIF

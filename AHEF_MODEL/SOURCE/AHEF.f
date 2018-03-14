@@ -36,7 +36,7 @@ C    written by routine writexage.f (exposure model)
 C             then used as input to (effects model)
 C INPUT  scratchage(71) read_exposure_age.f age exposure scratch file
 C    xagename   = name(1:len_trim(name))//'.'//'XSA'
-C INPUT  scratchagebl(81) read_blexposure_age.f b/l age exposure file
+C INPUT  scratchagebl(81) read_blexposure_age.f b/l age exposure scratch file
 C    xageblname = name(1:len_trim(name))//'.'//'XBA 
 C ------
 C OUTPUT ounit(40)     write_eff_agg_age.f  age spec file
