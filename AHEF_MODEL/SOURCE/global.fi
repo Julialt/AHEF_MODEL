@@ -15,9 +15,9 @@ C=====================================================================
 !     +             maxcty     =  3111,            ! continental US
 !     +             numcty     =  3111,            ! continental US
      +             maxcty     =   524,             ! FOR GROUP 1
-! find numcty by reading?
-     +             numcty     =   524,             ! for testing - memory prob!
-
+! JMLT TODO : find numcty by reading?
+!     +             numcty     =   524,             ! REGION 1
+     +             numcty     =   32,             ! REGION 7
      +             maxage     =    85,             ! maximum age cohort
      +             step       =     5,             ! step in cohort ages
      +             maxages    =     maxage/step+1, ! number of ages

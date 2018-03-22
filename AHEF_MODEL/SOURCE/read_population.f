@@ -11,7 +11,7 @@ C=====================================================================
       INCLUDE 'setup.h'
 
 c mlrm
-      CHARACTER*5 ctypl
+      CHARACTER*5 ctypl ! for debugging
 c
       CHARACTER(*) filename
       CHARACTER tempchar
@@ -29,7 +29,7 @@ c
       REAL einterp
 !-------------------------------------------------------------
 
-      filename = filename(1:len_trim(filename))//'.POP'
+      filename = filename(1:len_trim(filename))//'.pop'
 
       WRITE(errfile,*) 'Reading population : ',filename
       WRITE(6,*)       'Reading population : ',filename
@@ -75,7 +75,7 @@ c
      +            (popt(year,iage,icty,2), iage=1,maxages),
      +            (popt(year,iage,icty,3), iage=1,maxages),
      +            (popt(year,iage,icty,4), iage=1,maxages)
-! JMLT ! *.POP input file lines have been split into 2
+! JMLT ! *.POP now contains lines for 2 more population divisions:
             READ (iunit,*,END=999)
      +            (popt(year,iage,icty,5), iage=1,maxages),
      +            (popt(year,iage,icty,6), iage=1,maxages)
@@ -101,6 +101,8 @@ c------------ match up counties
      +                               +popt(year,iage,icty,6)
                   pop(year,iage,ii,3)=popt(year,iage,icty,3)
                   pop(year,iage,ii,4)=popt(year,iage,icty,4)
+
+! JMLT ! sub-populations 5 & 6 are folded into 1 & 2
 c                  pop(year,iage,ii,5)=popt(year,iage,icty,5)
 c                  pop(year,iage,ii,6)=popt(year,iage,icty,6)
                 ENDDO

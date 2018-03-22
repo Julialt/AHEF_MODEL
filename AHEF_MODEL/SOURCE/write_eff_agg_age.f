@@ -16,6 +16,8 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
       REAL caseout(maxlats)
       REAL caseoutb(maxlats)
       REAL casesan(2100 + topage + 4 - 1887,maxlats,maxpops)
+
+      INTEGER iloop, idummy, iyri
 !----------------------------------------------------------------
 
       IF (first) THEN

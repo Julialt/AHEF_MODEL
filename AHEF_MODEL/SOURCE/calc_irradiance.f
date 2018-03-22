@@ -37,7 +37,7 @@ c first read in county/latitude file
 
 ! JMLT added 1 line
 ! JMLT: Hardwired for DEBUG
-      ctyfip_file = "test1/cntyfip_g1.txt"
+      ctyfip_file = "test7/cntyfip_g7.txt"
 
 ! JMLT added argument
       CALL read_ctylat(ctyfip_file)
@@ -161,7 +161,7 @@ c
 ! DEBUG OUTPUT !
               IF ((iyear.EQ.1985).AND.(icty.EQ.1).AND.(imonth.EQ.1).AND.
      +            (itime.EQ.12)) THEN
-                WRITE(661,*)iyear,imonth,ilat,icty,cty_lat(icty),
+                WRITE(6,*)iyear,imonth,ilat,icty,cty_lat(icty),
      +                      dobunit,itime,czen,temp1,temp2,daily
               ENDIF ! selected sample point
 ! END DEBUG !

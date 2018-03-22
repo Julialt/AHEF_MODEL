@@ -1,5 +1,5 @@
 C=====================================================================
-      SUBROUTINE read_exposure_age_multi(indexname)
+      SUBROUTINE read_exposure_age(indexname)
 C=====================================================================
 C  Subroutine to read exposure by age file
 C=====================================================================
@@ -109,5 +109,5 @@ c     &          (exptmp(icohort,iagey,ilat),iagey=1,maxages*step+4)
 ! if desired index not found
 1130  CALL error(130, *999)
  
-      END SUBROUTINE read_exposure_age_multi
+      END SUBROUTINE read_exposure_age
 

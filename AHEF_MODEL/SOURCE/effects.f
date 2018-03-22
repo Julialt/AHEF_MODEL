@@ -22,19 +22,21 @@ C=====================================================================
       CHARACTER*12 age_pfn, cohort_pfn, coeff_pfn, popname
       CHARACTER*3  baftype
       CHARACTER*4  drtmp
+      CHARACTER*1  chrpops
       CHARACTER*23  text
       CHARACTER*23  tempchar
       REAL coh_wght,tmp1,tmp2,wtd_incid, cmflag
       REAL expwgt(maxages*step)
       REAL expbase,expscen
-      INTEGER year,poptmp,iageall
+      INTEGER year,iageall
+      INTEGER,DIMENSION(maxpops) :: poptmp
       INTEGER i,ii,icomp,ic,iwrite,itmp,imatch,imatch2,ictymatch,tmp
 c
       REAL::  t1,t2,tca,tcb
 
       REAL st_tot_base(15,maxpops)  ! by 15 state, 4 pop
       REAL st_tot_scen(15,maxpops)
-      REAL st_tot_dIFf(15,maxpops)
+      REAL st_tot_diff(15,maxpops)
       REAL st_coh_scen(15,4,maxpops)
       REAL st_coh_base(15,4,maxpops)
       REAL st_coh_diff(15,4,maxpops)
@@ -66,6 +68,9 @@ c      DATA group1 /1,5,12,22,28,29,40/
       total = 0
       numreg = 3
       first = .true.
+
+      WRITE(chrpops,'(i1)')maxpops
+
 cc      mrlm - debug
 cc      WRITE(*,*)'debug ',expage(2,3,1)
 
@@ -143,14 +148,17 @@ c
 c
       OPEN(o1unit, file=dir_io//'popout.txt')
 
+      WRITE(o1unit,*)"year, # in each of "//chrpops//
+     &               " population categories"
+
 ! JMLT IDEA: feed in desired output year range from input file
 
       DO year = 1985, 2025
         DO ipop = 1, maxpops
-          poptmp=0
-          DO iage=1, maxages
-            DO icty = 1, numcty
-              poptmp = poptmp + pop(year,iage,icty,ipop)
+          poptmp(ipop)=0
+          DO icty = 1, numcty
+            DO iage=1, maxages
+              poptmp(ipop) = poptmp(ipop) + pop(year,iage,icty,ipop)
 c mlrm debug between codes - ---------
 c            IF ((icty.EQ.1).AND.(ipop.EQ.1).AND.(year.EQ.2005)) THEN
 c            WRITE(99,*)'year,iage,icty,ipop',year,iage,icty,ipop
@@ -159,14 +167,15 @@ c            ENDIF
 c--------------------------------------
             ENDDO ! icty
           ENDDO ! iage
-          WRITE(o1unit,125) year,poptmp
         ENDDO ! ipop
+        WRITE(o1unit,'(2x,i4,'//chrpops//'(2x,i12))') 
+     &                     year,poptmp(1:maxpops)
       ENDDO ! year
 c
 cc      WRITE(*,*)'********pop', pop(2005,1,1,1)
 c
 120   FORMAT(t2,a5,t7,i2,t12,a5,t17,i2)
-125   FORMAT(t2,i4,t8,i12)
+125   FORMAT(t2,i4,t8,i12,)
       CLOSE(o1unit)
 
       CALL skip(effrun, eof)
@@ -184,7 +193,7 @@ c
 
 
 ! JMLT: new
-        DO i=1,2
+        DO i=1,2 ! loop projection, baseline
 
           WRITE(*,*) '..........................................'
           SELECT CASE (i)
@@ -199,10 +208,6 @@ c
               CALL read_exposure_age(indname)
 
           END SELECT
-
-! old 
-        !CALL read_exposure_age(indname)
-        !CALL read_blexposure_age(indname)
 
 C=====================================================================
 C  Calculate incidence using BAFs as a percentage change in
@@ -242,7 +247,8 @@ C=====================================================================
       WRITE(*,*) ".........................................."
 c
 C=====================================================================
-C  Read Exposure Weights
+C  Read Exposure Weights 
+C  JMLT - REWRITE THIS TO ACCEPT INPUT FROM RUNFILES
 C=====================================================================
 
       OPEN (iunit,file=dir_dat//'EXPWGTS.DAT')
@@ -255,22 +261,21 @@ C=====================================================================
 
         endpttmp=" "
 
-!        READ (iunit,240)  endpttmp
-!240     FORMAT (t3,a8)
-!        CALL skip (iunit,eof)
-
 ! JMLT ! 
 ! Length of read-in field and # of leading blanks is unknown.
-! This format finds the emd-of-line character so we can parse the input.
+! This format finds the end-of-line character so we can parse the input.
         READ(iunit,'(Q,A)') i,bdummy
+        CALL skip (iunit,eof)
+
         adummy=ADJUSTL(bdummy(1:i-1))
         i=INDEX(adummy," ")
         endpttmp(1:i-1) = adummy(1:i-1)
 
-        CALL skip (iunit,eof)
+
         DO iagey=1,maxages*step
           READ (iunit,250) expwgt(iagey)
         ENDDO ! iagey
+
 250     FORMAT (t8,f4.2)
         CALL skip (iunit,eof)
 
@@ -300,21 +305,19 @@ C=====================================================================
 
       DO WHILE (.NOT.eof)
 
-c      DO ilat = 1, numlats
-c      DO ipop = 1, maxpops
-        DO ilat =1,3
-          DO ipop=1,4
+        DO ilat = 1, numlats
+          DO ipop = 1, maxpops
 
             endpttmp=" "
             popseg=" "
 
-!            READ(iunit,330) endpttmp
-!330         FORMAT(t1,a8)
-
 ! read in string with unknown length, leading blanks
             READ(iunit,'(Q,A)') i,bdummy
+
             bdummy=ADJUSTL(bdummy(1:i-1))
+
             i=INDEX(bdummy," ")
+
             endpttmp(1:i-1) = bdummy(1:i-1)
 
             WRITE(*,*) 'endptmp = ', endpttmp 
@@ -323,13 +326,14 @@ c      DO ipop = 1, maxpops
 332         FORMAT(t5,i1)
             WRITE(*,*) ilattmp
 
-!            READ(iunit,334) popseg
-!334         FORMAT(t1,a12)
 ! read in string with unknown length, one integral blank
             READ(iunit,'(Q,A)') i,bdummy
+
             bdummy=ADJUSTL(bdummy(1:i-1))
+
             i=INDEX(bdummy," ")
             ii=INDEX(bdummy(i+1:LEN(bdummy))," ")
+
             popseg(1:i+ii-1) = bdummy(1:i+ii-1)
 
             WRITE(*,*) popseg
@@ -337,6 +341,7 @@ c      DO ipop = 1, maxpops
             READ(iunit,336) adummy   ! Skip a line
 336         FORMAT(t1,a3)
 
+! JMLT TODO: write error lines
 
             IF ((popseg .EQ. 'WH MALE').AND.(ipop .NE. 1)) THEN
               ! make an error for this
@@ -353,6 +358,7 @@ c      DO ipop = 1, maxpops
 ! find first year to read
 305         READ (iunit, 340) cohyrtmp
 340         FORMAT(t1,i4)
+
             IF (cohyrtmp.LT.colo_year) GOTO 305
 
             BACKSPACE(iunit)
@@ -390,8 +396,7 @@ C them.
 C NOTE: This routine changed to print only for ipop=1 (whm), in order to
 C       limit size of the AHEF.ERR file.
 C=====================================================================
-c
-cc
+
        WRITE (errfile, '(A)') '==========================='
        WRITE (errfile,*) endpttmp
        WRITE (errfile, '(A)') 'Baseline incidence matrices'
