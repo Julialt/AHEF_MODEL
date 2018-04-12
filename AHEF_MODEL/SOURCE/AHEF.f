@@ -24,7 +24,7 @@ C
 C FILENAMES:   
 C IN/OUT UNIT          WHERE_USED           DESCRIPTION
 C ------
-C INPUT  iunit(30)     readozone.f          DU matrix for lat/month
+C INPUT  iunit(30)     read_ozone.f         DU matrix for lat/month
 C    oznname    = name(1:len_trim(name))//'.'//ozn_ext
 C INPUT  exprun(50)    exposure.f           exposure run file (input pointers)
 C    exprunname = 'EXP_RUN.'//exprun_ext
@@ -116,18 +116,18 @@ C  Open global runfile and global default names and extensions
 C=====================================================================
 
       WRITE (*,*) 'Atmospheric and Health Effects Framework V4.0'
-      WRITE (*,*) 'ICF Incorporated, 1997'
+      WRITE (*,*) 'ICF Incorporated, 1997, updated 2018'
       WRITE (*,*)
 
-      OPEN(errfile,FILE=dir_io//'AHEF.ERR')
-      OPEN(runfile,FILE=dir_io//'AHEF.RUN',status='OLD',ERR = 1010)
-C      OPEN(runfile,FILE=dir_io//'AHEF.RUN',status = 'OLD')
+      OPEN(logfile,FILE=dir_io//'AHEF.LOG')
+      OPEN(runfile,FILE=dir_in//'AHEF.RUN',status='OLD',ERR = 1010)
+      WRITE(*,*)"OPENINING runfile", dir_io//'AHEF.RUN'
 
       CALL skip( runfile, eof )
 
 ! read file extensions : table header line from file AHEF.RUN
       READ(runfile,100,err=1070) emi_ext, ozn_ext, exp_ext, eff_ext
-      WRITE(errfile,100)         emi_ext, ozn_ext, exp_ext, eff_ext
+      WRITE(logfile,100)         emi_ext, ozn_ext, exp_ext, eff_ext
 
 100   FORMAT(t26,4(a3,3x))
 
@@ -144,10 +144,10 @@ C=====================================================================
         runcount = runcount + 1
         WRITE (*,'(A,i3.3)') ' Executing run ',runcount
 
-        READ( runfile, 200, err=1071 )
+        READ(runfile,200,err=1071)
      +                   name, outname, temp1, temp2, temp3, temp4,
      +                   atmrun_ext, exprun_ext, effrun_ext
-        WRITE( errfile, 200 )
+        WRITE(logfile,200)
      +                   name, outname, temp1, temp2, temp3, temp4,
      +                   atmrun_ext, exprun_ext, effrun_ext
 200     FORMAT(t4,a8,t15,a8,t27,4(a1,5x),t52,3(a3,6x))
@@ -249,7 +249,7 @@ c
 
       ENDDO
 
-      CLOSE(errfile)
+      CLOSE(logfile)
       CLOSE(runfile)
 
 

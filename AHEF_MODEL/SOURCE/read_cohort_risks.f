@@ -13,7 +13,7 @@ c=====================================================================
 !----------------------------------------------------
 
       OPEN(iunit, file = cohortname, status = 'OLD', err = 1120)
-      WRITE(errfile,*) 'Reading Cohort Risks'
+      WRITE(logfile,*) 'Reading Cohort Risks'
 
       CALL skip( iunit, eof )
 
@@ -24,7 +24,7 @@ c=====================================================================
         IF (year .ge. colo_year)
      +    cohort_risk((year-colo_year)/step + 1) = value
 
-        WRITE( errfile, 100 ) year, value
+        WRITE( logfile, 100 ) year, value
 100     FORMAT(t5,i4,t15,f5.2)
 
         IF ( (lastyear .ne. 0) .and.
@@ -33,7 +33,7 @@ c=====================================================================
           DO yrlp = max(colo_year, lastyear + step), year - step, step
             cohort_risk((yrlp-colo_year)/step + 1) =
      +         xinterp(lastvalue, value, lastyear, yrlp, year)
-            WRITE(errfile,100) yrlp,
+            WRITE(logfile,100) yrlp,
      +             cohort_risk((yrlp-colo_year)/step + 1)
           END DO ! yrlp
         ENDIF

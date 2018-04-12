@@ -21,7 +21,7 @@ c
       REAL    lookup1,lookup2,dailyincr
 
 ! JMLT added 1 line
-      CHARACTER(20) ctyfip_file
+      CHARACTER(30) ctyfip_file
 
 c - printing out for input into VBA
 ccc--      REAL czenarr(17,12)
@@ -29,15 +29,15 @@ c
 
       yearlyirrad = 0                         ! initialize accumulator
 
-      WRITE(errfile,*) 'Calculating Irradiance ...'
+      WRITE(logfile,*) 'Calculating Irradiance ...'
       WRITE(*,*)       'Calculating Irradiance ...'
 c
 c MRLM match county lat with latitude band to pick out the right ozone (DU)
 c first read in county/latitude file
 
 ! JMLT added 1 line
-! JMLT: Hardwired for DEBUG
-      ctyfip_file = "test7/cntyfip_g7.txt"
+! JMLT: Hardwired for DEBUG, already reading that it's dir_pop
+      ctyfip_file = "Region7/cntyfip_g7.txt"
 
 ! JMLT added argument
       CALL read_ctylat(ctyfip_file)
@@ -184,7 +184,7 @@ c
 
 c      mrlm uncommented
 cc      WRITE(917,*)'icty,iyear,yrirrad=',icty,iyear,yearlyirrad(iyear,icty)
-c           WRITE(errfile,'(t1,i4,t6,i4,t12,e9.4)')
+c           WRITE(logfile,'(t1,i4,t6,i4,t12,e9.4)')
 c     +          iyear, ilat, yearlyirrad(iyear,ilat)
 
        ENDDO ! iyear

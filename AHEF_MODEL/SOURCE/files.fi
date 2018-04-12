@@ -6,7 +6,7 @@ C  throughout the program.
 C  and hardwired directory paths.
 C=====================================================================
 
-      INTEGER runfile, errfile, exprun, effrun
+      INTEGER runfile, logfile, exprun, effrun, atmrun
       INTEGER scratch, scratchbl, scratchage, scratchagebl
       INTEGER o1unit, o2unit, o3unit
       INTEGER iunit, ounit 
@@ -14,7 +14,7 @@ C=====================================================================
 
       PARAMETER(
      +            runfile   = 10,     ! global run file
-     +            errfile   = 20,     ! global error file
+     +            logfile   = 20,     ! global log (error) file
      +            iunit     = 30,     ! generic input
      +            iounit    = 35,     ! generic input
      +            ounit     = 40,     ! generic output
@@ -24,6 +24,7 @@ C=====================================================================
      +            o1unit    = 41,     ! generic output
      +            o2unit    = 42,     ! generic output
      +            o3unit    = 43,     ! generic output
+     +            atmrun    = 40,     ! atmosphere run file
      +            exprun    = 50,     ! exposure run file
      +            effrun    = 60,     ! effects run file
      +            scratch   = 70,     ! exposure scratch file

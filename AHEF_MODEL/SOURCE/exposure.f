@@ -30,9 +30,9 @@ C=====================================================================
 
       WRITE(*,*)' ozone filename = ',oznname
 
-      OPEN(exprun,file=dir_io//exprunname,status='OLD',err=1050)
+      OPEN(exprun,file=dir_in//exprunname,status='OLD',err=1050)
 
-      WRITE(errfile,*) 'Reading exposure runfile ',exprunname
+      WRITE(logfile,*) 'Reading exposure runfile ',exprunname
       WRITE(*,*) 'Reading exposure runfile ',exprunname
 
       CALL skip(exprun, eof)
@@ -52,7 +52,7 @@ C=====================================================================
 
         READ(exprun,100,err=1070 )
      +              indexname,lookupname,minmon,maxmon,weightname,drtype
-        WRITE(errfile,100) 
+        WRITE(logfile,100) 
      +              indexname,lookupname,minmon,maxmon,weightname,drtype
 
 ! 'tn' means "skip to column n"
@@ -68,7 +68,7 @@ C=====================================================================
 
         WRITE(*,*)'lookupname  = ',lookupname
 
-        CALL readlookup(lookupname)
+        CALL read_lookup(lookupname)
         IF (errflag) GOTO 999
 
 !------------------------------------------------------------------
@@ -98,12 +98,12 @@ C=====================================================================
             CASE (1)
               !WRITE(*,*)'Reading and calculating projection exposure'
               expblflag = .false.
-              CALL readozone(oznname)
+              CALL read_ozone(oznname)
 
             CASE (2)
               !WRITE(*,*)'Reading and calculating baseline exposure'
               expblflag = .true.
-              CALL readozone('BASELINE.OZN')
+              CALL read_ozone('BASELINE.OZN')
 
           END SELECT
 

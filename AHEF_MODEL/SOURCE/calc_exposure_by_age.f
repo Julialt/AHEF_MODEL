@@ -16,7 +16,7 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
       INTEGER yrlplo, yrlphi, yrmult, temp
       REAL agewght, wght_denom, wght
 
-      WRITE(errfile,*) "Calculating exposure by age"
+      WRITE(logfile,*) "Calculating exposure by age"
       WRITE(*,*) "Calculating exposure by age"
 c
 c      WRITE(*,*)'***** yrhi, yrlo = ',yrhi,yrlo

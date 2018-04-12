@@ -1,6 +1,4 @@
 c	Version 10.23.2012
-c MRLM replaced satellite linear regression coefficients
-c provided by Mark Wagner to obtain same ozone results
 c
 c  updated lifetimes, fractional release and alpha based
 c  on WMO(2010) and WMO (2007) - see notes

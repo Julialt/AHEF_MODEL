@@ -59,84 +59,84 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
 
         CASE(10)
           WRITE(*,*)         'ERROR 010: Runfile not found'
-          WRITE(errfile,*)   'ERROR 010: Runfile not found'
+          WRITE(logfile,*)   'ERROR 010: Runfile not found'
 
         CASE(20)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  No action specified'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  No action specified'
 
         CASE(30)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Ozone file not found'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Ozone file not found'
 
         CASE(40)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Lookup file not found'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Lookup file not found'
 
         CASE(50)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Exposure run file not found'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Exposure run file not found'
 
         CASE(60)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Age weighting file not found'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Age weighting file not found'
 
         CASE(70)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Unexpected format or end of file'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Unexpected file format or EOF'
 
         CASE(80)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Effects run file not found'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Effects run file not found'
 
         CASE(90)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Population file not found '
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Population file not found '
 
         CASE(100)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Exposure and Effects Regions Differ'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Exposure and Effects Regions Differ'
 
         CASE(110)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Coefficient file not found'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Coefficient file not found'
 
         CASE(120)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Cohort risk file not found'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Cohort risk file not found'
 
         CASE(130)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Exposure measure not found'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Exposure measure not found'
 
         CASE(140)
           WRITE(*,100)       ' ERROR ',number,' (Run ',runcount,
      +                       '):  Age coefficients file not found'
-          WRITE(errfile,100) 'ERROR ',number,' (Run ',runcount,
+          WRITE(logfile,100) 'ERROR ',number,' (Run ',runcount,
      +                       '):  Age coefficients file not found'
 
       END SELECT
@@ -177,7 +177,7 @@ c
      +                        (idx2-idx1+0.0)/(idx3-idx1) )
       ELSE
         einterp = 0
-        WRITE (errfile,*) 'Interpolation Error'
+        WRITE (logfile,*) 'Interpolation Error'
       ENDIF
 c mlrm 2/2009 testing
 c      If ((idx1.EQ.1985).AND.(idx2.EQ.1986).AND.(idx3.EQ.1990)) THEN
@@ -209,7 +209,7 @@ C=====================================================================
         xinterp = valu1 + (valu2-valu1) * (idx2-idx1+0.0)/(idx3-idx1)
       ELSE
         xinterp = 0
-        WRITE (errfile,*) 'Interpolation Error'
+        WRITE (logfile,*) 'Interpolation Error'
       ENDIF
 
       RETURN

@@ -31,7 +31,7 @@ c
 
       filename = filename(1:len_trim(filename))//'.pop'
 
-      WRITE(errfile,*) 'Reading population : ',filename
+      WRITE(logfile,*) 'Reading population : ',filename
       WRITE(6,*)       'Reading population : ',filename
 
       OPEN(iunit, file = filename, status = 'OLD', err = 1090)

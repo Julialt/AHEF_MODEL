@@ -1,0 +1,40 @@
+============================================
+README file in directory AHEF_MODEL/POP_DATA
+============================================
+Author: Julia Lee-Taylor, April 9, 2018
+Purpose: Description of input data and its subdivision into regions,
+         as supplied with the AHEF model.
+============================================
+
+Region i.d. numbers ( = 'x', below)
+
+1: New England (CT,DE,DC,ME,MD,MA,NH,NJ,NY,OH,PA,RI,VT,VA,WV)
+2: Northern South (GA,KY,NC,SC,TN)
+3: Southern South (AL,AR,FL,LA,MS,MO,OK)
+4: Midwest (IL,IN,IA,MI,MN,WI)
+5: W Plains & Rockies (CO,ID,KS,MT,NE,ND,SD,UT,WY)
+6: SW and West Coast (AZ,CA,NM,NV,OR,TX,WA)
+7: Non-contiguous (AK,HI)
+
+
+Filename: cntyfip_gx.txt 
+Description: ascii file, 2 columns:
+          1) list of county FIPS codes 
+          2) latitude of county center (format f8.5) (presumably population-weighted per US census data?)
+
+Filename: popcy_gx.pop
+Description: ascii file, row length alternates between (4x18)+2, and (2x18)
+     line 1) year, county FIP, population(cohort,sub-population(1:4))
+     line 2) population(cohort,sub-population(5:6))
+cohort = 5-year age group starting 0-5, ending 85+
+sub-population : 1 = White_male
+                 2 = White_female
+                 3 = Black_male
+                 4 = Black_female
+                 5 = Hispanic_male
+                 6 = Hispanic_female
+NB: The effects module counts "Hispanic" as "White".
+    While file BASEINC.TXT gives baseline incidence as "White" or "Non-White".
+    
+
+The a

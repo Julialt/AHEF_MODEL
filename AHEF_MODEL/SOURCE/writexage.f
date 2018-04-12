@@ -26,7 +26,7 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
         expfilename = xagename
       ENDIF
 
-      WRITE(errfile,*) "Writing to exposure file : ",
+      WRITE(logfile,*) "Writing to exposure file : ",
 !     &             expfilename,
      &             dir_io//expfilename
       WRITE(*,*) "Writing to exposure file : ",

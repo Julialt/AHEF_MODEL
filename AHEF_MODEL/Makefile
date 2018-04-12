@@ -51,6 +51,7 @@ vpath %.o $(OBJDIR)
 
 
 MAIN_SOURCE = AHEF.f
+#MAIN_SOURCE = calc_EESC.f
  
 # find all sources *.f in LIB ##and subdirectories
 SOURCES := $(wildcard $(LIBDIR)/*.f) ##$(wildcard $(LIBDIR)/**/*.f)
@@ -78,9 +79,8 @@ $(OBJDIR)/%.o : %.f
 $(OBJDIR)/aheflib.a : $(OBJS)
 	ar -r $@ $(OBJS)
 
-AHEF : $(OBJDIR)/aheflib.a $(MAINDIR)/$(MAIN_SOURCE)
+AHEF : $(OBJDIR)/aheflib.a $(MAINDIR)/$(MAIN_SOURCE) 
 	$(FC) $(MAINDIR)/$(MAIN_SOURCE) $(PRECFLAG) $(LNKFLAGS) $(INCLUDES) $(OBJDIR)/aheflib.a -I $(INCDIR) -o$(MAINDIR)/$@
-
 
 clean :
 	rm -f $(OBJDIR)/*

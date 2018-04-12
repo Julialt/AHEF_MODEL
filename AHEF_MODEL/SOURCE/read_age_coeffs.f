@@ -12,7 +12,7 @@ c=====================================================================
 !--------------------------------------------------
 
       OPEN(iunit, file = agename, status = 'OLD', err = 1140)
-      WRITE(errfile,*) 'Reading Age Coefficients'
+      WRITE(logfile,*) 'Reading Age Coefficients'
 
       CALL skip( iunit, eof )
 
@@ -20,7 +20,7 @@ c=====================================================================
 
       DO WHILE (.not. eof)
         READ( iunit, 100 ) age, age_coeffs(age/step + 1)
-        WRITE( errfile, 100 ) age, age_coeffs(age/step + 1)
+        WRITE( logfile, 100 ) age, age_coeffs(age/step + 1)
 100     FORMAT(t5,i2,t13,f5.2)
 
         IF ( (lastage .ne. -1) .and.
@@ -30,7 +30,7 @@ c=====================================================================
      +         xinterp(age_coeffs(lastage/step + 1),
      +                 age_coeffs(age/step + 1),
      +                 lastage, agelp, age)
-            WRITE(errfile,100) agelp,
+            WRITE(logfile,100) agelp,
      +             age_coeffs(agelp/step + 1)
           ENDDO ! agelp
         ENDIF

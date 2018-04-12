@@ -17,7 +17,7 @@ C=====================================================================
 
 !--------------------------------------------
 
-      WRITE (errfile, *) 'Reading Exposure'
+      WRITE (logfile, *) 'Reading Exposure'
 
 
       IF (expblflag) THEN
@@ -47,7 +47,7 @@ C=====================================================================
         READ(unit,103)ayeartmp
           READ(ayeartmp,*)cohi_year
 
-        WRITE(errfile,*)indextmp,colo_year,cohi_year
+        WRITE(logfile,*)indextmp,colo_year,cohi_year
 c
 100     FORMAT(t16,a8,t46,i4)
 101     FORMAT(t16,a8)
@@ -77,7 +77,7 @@ cc mrlm - end
 
 120         FORMAT(t5,100(:,e12.4))
 
-c           WRITE(errfile,120) 
+c           WRITE(logfile,120) 
 c     &          (exptmp(icohort,iagey,ilat),iagey=1,maxages*step+4)
 
           ENDDO ! icohort
@@ -95,7 +95,7 @@ c     &          (exptmp(icohort,iagey,ilat),iagey=1,maxages*step+4)
 ! DEBUG
         IF (indexname.EQ.indextmp) GOTO 999
 
-        WRITE (errfile, *) 'Skipping to Next'
+        WRITE (logfile, *) 'Skipping to Next'
 
         CALL skip(unit,eof)
 

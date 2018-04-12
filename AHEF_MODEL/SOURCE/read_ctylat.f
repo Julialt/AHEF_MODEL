@@ -14,8 +14,8 @@ C===============================================================================
       CHARACTER*(*) filename
 c
 c
-      WRITE(errfile,*) "Reading ctyfip file ",filename
-      OPEN(unit=67,file=dir_io//filename, status="old")
+      WRITE(logfile,*) "Reading ctyfip file ",filename
+      OPEN(unit=67,file=dir_pop//filename, status="old")
 c
       CALL skip(67,eof)
 c

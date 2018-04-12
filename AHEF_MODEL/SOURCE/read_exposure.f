@@ -15,7 +15,7 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
 !      LOGICAL eof
       CHARACTER*8 indexname, indextmp
 
-      WRITE (errfile, *) 'Reading Exposure'
+      WRITE (logfile, *) 'Reading Exposure'
 
       REWIND(scratch)
       CALL skip(scratch,eof)
@@ -46,7 +46,7 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
 
             READ(scratch,120) 
      &          (expage(icohort,iage,icty),iage=1,maxages*step+4)
-!            WRITE(errfile, 120) (expos1(icohort,iage,ilat),
+!            WRITE(logfile, 120) (expos1(icohort,iage,ilat),
 !    +            iage = 1, maxages)
 120         FORMAT(t5,100(:,e12.4))
 
@@ -56,7 +56,7 @@ c     +countyAHEF\miniruns\run group 1\global.fi'
 !       WRITE (*,*) indexname,indextmp
         IF (indexname .eq. indextmp) GOTO 999
 
-        WRITE (errfile, *) 'Skipping to Next'
+        WRITE (logfile, *) 'Skipping to Next'
         CALL skip(scratch,eof)
 
       END DO

@@ -13,13 +13,13 @@ C=====================================================================
 !---------------------------------------------------
 
       OPEN(iunit, file = coeffname, status = 'OLD', err = 1110)
-      WRITE(errfile,*) 'Reading Coefficients'
+      WRITE(logfile,*) 'Reading Coefficients'
 
       CALL skip( iunit, eof )
 
       DO ipop = 1, maxpops
         READ( iunit, 100, END=1070 ) (coeff(ipop,ilp), ilp=1,5)
-        WRITE( errfile, 100 ) (coeff(ipop,ilp), ilp=1,5)
+        WRITE( logfile, 100 ) (coeff(ipop,ilp), ilp=1,5)
 100     FORMAT(t15,f6.3,t25,100(f6.3,7x))
 
         CALL skip( iunit, eof )
