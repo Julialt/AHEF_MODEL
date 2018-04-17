@@ -24,8 +24,8 @@
 *         tau  : lifetime (yr) 
 *         wmol : molecular weight (g/mol)
 * 
-* NB: SPECIES MUST BE IN SAME ORDER AS IN EMISSIONS FILE 
-*     OR PROGRAM WILL STOP
+* NB: SPECIES MUST BE IN SAME ORDER AND WITH EXACTLY SAME NAMES AS IN 
+*     EMISSIONS FILE OR PROGRAM WILL STOP
 *----------------------------------------------------------------------*
 * species   ncl nbr fclr   tau     wmol
 *----------------------------------------------------------------------*

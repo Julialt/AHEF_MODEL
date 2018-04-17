@@ -3,24 +3,26 @@
 *  Runfile for Effects model
 *  Lines beginning with '*' are comments
 *========================================================================
-*                 ========            ====    ====
-    Population:   popcy_g1    Output: 1950 to 2150 (years/cohorts)
-*     (*.POP)     ========            ====    ====
+*    Runname      Population
+*   (directory)   (*.POP)            (was 1950-2050)
+*   ========      ========            ====    ====
+    Region7       popcy_g7    Output: 1980 to 2000 (years/cohorts)
+*   ========      ========            ====    ====
 *
     Results by Year? >X<  (else by cohort)
     Results by Age?  > <  (else total only)
 *
 *   Endpoint                   Age Coeff's   Cohort Risks  Coefficients
-*   Name           Index         *.AGE         *.COH         *.COE       DRtype
+*   Name           Index         *.AGE         *.COH         *.COE       DRtype (CMYR or CMPK)
 *  >========<    >========<    >========<    >========<    >========<    >====<
-    CATARACT      CATARACT      DUMMY         DUMMY         DUMMY         CMYR
+*    CATARACT      CATARACT      DUMMY         DUMMY         DUMMY         CMYR
     MELAINC       MELANOMA      SPL           SPL           MELAN_FT      CMYR
     MELAMORT      MELANOMA      SPL           SPL           MELAN_FT      CMYR
-    NMSCMORT      NMSC          DUMMY         DUMMY         DUMMY         CMYR
+*    NMSCMORT      NMSC          DUMMY         DUMMY         DUMMY         CMYR
 *   MELA_FHN      MELANOMA      SPL           SPL           MELAN_FT      CMYR
 *   MELA_TLE      MELANOMA      SPL           SPL           MELAN_FT      CMYR
-    BASAL         NMSC          DUMMY         DUMMY         DUMMY         CMYR
-    SQUAMOUS      NMSC          DUMMY         DUMMY         DUMMY         CMYR
+*    BASAL         NMSC          DUMMY         DUMMY         DUMMY         CMYR
+*    SQUAMOUS      NMSC          DUMMY         DUMMY         DUMMY         CMYR
 *  >========<    >========<    >========<    >========<    >========<    >====<
 *
 *========================================================================

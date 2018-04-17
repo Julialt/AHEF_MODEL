@@ -16,8 +16,8 @@ C=====================================================================
      +            runfile   = 10,     ! global run file
      +            logfile   = 20,     ! global log (error) file
      +            iunit     = 30,     ! generic input
-     +            iounit    = 35,     ! generic input
-     +            ounit     = 40,     ! generic output
+     +            iounit    = 32,     ! generic input
+     +            ounit     = 35,     ! generic output
      +            ounit21   = 21,     ! generic output
      +            ounit31   = 31,     ! generic output
      +            ounit441  = 441,    ! generic output

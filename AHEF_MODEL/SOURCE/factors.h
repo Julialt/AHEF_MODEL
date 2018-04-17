@@ -1,1 +1,0 @@
-../INPUT_DATA/WMO2010_factors.dat

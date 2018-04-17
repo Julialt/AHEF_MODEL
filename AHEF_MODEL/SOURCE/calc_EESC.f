@@ -1,7 +1,6 @@
-      !SUBROUTINE calc_EESC
-      PROGRAM calc_EESC
+      SUBROUTINE calc_EESC(odsfile,emisfile,scenario)
 !=====================================================================!
-! PURPOSE: read ODS emission scenario and calculat
+! PURPOSE: read ODS emission scenario and calculate
 !          Effective Equivalent Stratospheric Chlorine (EESC)
 ! AUTHOR:  Julia Lee-Taylor, NCAR
 ! UPDATE: April 2, 2018
@@ -26,6 +25,7 @@
 ! ncl  = number_Cl per species (integer)
 ! nbr  = number_Br per species (integer)
 ! wmol = molar weight of ODS
+! emis = global emissions of ODS per year
 ! xnbr = equivalent strat. Cl release Fac. for Brominated Compounds
 ! cf   = emission -> burden conversion factor (kt/ppt)
 ! fclr = strat_Cl-Release factors
@@ -71,8 +71,11 @@
 ! general ODS behavior parameters
       REAL :: fsurf, fsurfCH3Br, alpha
 
+! units of emissions
+      CHARACTER(10) :: units
+
 ! output values
-      INTEGER,DIMENSION(myr) :: year
+      INTEGER,DIMENSION(myr) :: year,pyr
       REAL,DIMENSION(myr) :: eesctot ! EESC integrated over all species
 !-----------------------
 ! standard atmospheric & molar parameters
@@ -85,41 +88,22 @@
 !-----------------------
 ! internal variables
       INTEGER :: i,j,isp,iyr,tyr,i1,i2
-      INTEGER :: yfirst,ylast,nyr
+      INTEGER :: yfirst,ylast,nyr,pyfirst,pylast,npyr
       INTEGER,DIMENSION(nods) :: invals1,invals2
-      REAL :: r1,r2,r3
-      CHARACTER(len=50) :: filename,emisfile,odsfile,eescfile
-      CHARACTER(len=20) :: scenario
+      REAL,DIMENSION(nods,myr) :: tmpreal
+      CHARACTER(len=50) :: filename,odsfile,emisfile,eescfile
+      CHARACTER(len=20) :: scenario,scenario_p
       CHARACTER(len=10),DIMENSION(nods) :: tnam
 
 !----------------------------------------------------------------------!
 ! initialise
 
       eesctot = 0
+      DO i=1,nods
+        ODS_data(i)%emis = 0.
+      ENDDO
 
 !----------------------------------------------------------------------!
-! "atmrunname" will eventually be passed in from AHEF.f
-! "eescfile" will eventually be constructed from readin info
-      atmrunname = "ATM_RUN.BSL"
-
-      scenario = "WMO2010_BSL"
-      i=INDEX(scenario," ")-1
-      eescfile = scenario(1:i)//".ESC"
-
-! open and read instructions file
-      OPEN(atmrun,file=dir_io//atmrunname,status='OLD',err=999)
-
-      WRITE(logfile,*) 'Reading atmos runfile ',atmrunname
-      WRITE(*,*)       'Reading atmos runfile ',atmrunname
-
-      CALL skip(atmrun, eof)
-      READ (atmrun,*) odsfile
-      CALL skip(atmrun, eof)
-      READ (atmrun,*) emisfile
-      CALL skip(atmrun, eof)
-
-      CLOSE(atmrun)
-
 ! open and read ODS data file
 
       filename = dir_ods//odsfile
@@ -127,8 +111,9 @@
       WRITE(*,*)'Reading ODS data file ',filename
 
       CALL skip(iunit,eof)
+
       READ(iunit,*) fsurf, fsurfCH3Br, alpha
-      PRINT*, fsurf, fsurfCH3Br, alpha
+      !PRINT*, fsurf, fsurfCH3Br, alpha
       CALL skip(iunit,eof)
 
       isp = 0
@@ -157,6 +142,7 @@
 
       END DO !WHILE (.NOT. eof)
 
+      CLOSE(iunit)
 !----------------------------------------------------------------------!
 ! open and read species emissions file
 
@@ -166,35 +152,51 @@
 
       CALL skip(iunit,eof)
 
+! read the header... units string (expecting "T.yr" or "kT/yr"
+      READ(iunit,*) units
+      CALL skip(iunit,eof)
+
 ! read the header... column numbers
       READ(iunit,*) invals1
+      CALL skip(iunit,eof)
+
 ! read the header... species names
       READ(iunit,*)tnam
+      CALL skip(iunit,eof)
      
 ! CHECK that emissions file and ODS file inputs are in same order
 ! IF NOT, STOP
-      PRINT*,"ODS species list ....... EMISSIONS species "
       DO isp=1,nods
-        PRINT*,isp,ODS_data(isp)%spnam ,invals1(isp),tnam(isp)
         IF(INDEX(tnam(isp),ODS_data(isp)%spnam).NE.1)THEN
+          PRINT*,"ODS species ....... EMISSIONS species "
+          PRINT*,isp,ODS_data(isp)%spnam ,invals1(isp),tnam(isp)
           PRINT*,"!! mismatch in species order !!"
-          PRINT*,"!! EDIT the ODS parameter input file !!"
+          PRINT*,"!! EDIT the EMISSIONS input file !!"
           STOP
         ENDIF
       ENDDO
+
+! read the file... year, emissions by species
 
       iyr = 0
       DO WHILE (.NOT. eof)
         iyr = iyr+1
   
-! read the file... year, emissions by species
-
         READ(iunit,*) year(iyr),ODS_data%emis(iyr)
+
+! convert emissions to kT if necessary (based on "units" string)
+        IF(units(1:1).EQ."k".OR.units(1:1).EQ."K")THEN
+          ! no conversion needed
+        ELSE
+          ODS_data%emis(iyr) = ODS_data%emis(iyr) / 1e3
+        ENDIF !(units(1:1).EQ."k".OR.units(1:1).EQ."K")THEN
 
 ! position file at next data line (ie not beginning with '*')
         CALL skip (iunit,eof)
 
       END DO !WHILE (.NOT. eof)
+
+      CLOSE(iunit)
 
       nyr = iyr
       yfirst = year(1)
@@ -203,10 +205,6 @@
 !----------------------------------------------------------------------!
 ! DO THE CALCULATIONS : DERIVED QUANTITIES
 !----------------------------------------------------------------------!
-! convert emissions to kT if necessary (hardwire)
-      DO i = 1,nyr
-        ODS_data%emis(i) = ODS_data%emis(i) / 1e3
-      ENDDO
  
 ! DERIVED SPECIES PROPERTIES : ex1 = EXP(-1/tau(isp))
       ODS_data%ex1 = EXP(-1/ODS_data%tau)
@@ -282,10 +280,12 @@
 ! DEBUG CHECKS
 ! (uncomment anything you want to print out)
 
+      GOTO 600 ! to bypass debug section
+
       iyr = 65
-      PRINT*,"results for year :",year(iyr)
+      PRINT*,"EESC results for year :",year(iyr)
+
       DO isp=1,nods
-!      DO isp=6,6 !nods
         PRINT*,ODS_data(isp)%spnam
 !     &        ,ODS_data(isp)%ncl       
 !     &        ,ODS_data(isp)%nbr      
@@ -304,77 +304,53 @@
 !     &        ,ODS_data(isp)%stCl(iyr)
 !     &        ,ODS_data(isp)%ECEM(iyr)
      &        ,ODS_data(isp)%EESC(iyr)
-     &        ,eesctot(iyr)
       ENDDO
+      PRINT*,"total EESC = " ,eesctot(iyr)
+
 ! END DEBUG CHECKS
+
+600    CONTINUE
 
 !----------------------------------------------------------------------!
 ! GENERATE OUTPUT ("eescfile")
-! 1. speciated EESC
-! 2. total EESC
+! 1. total EESC; 2. speciated EESC
 
+      i = INDEX(scenario," ")-1
+
+      !PRINT*,scenario
+
+      i = INDEX(scenario," ")-1
+      eescfile = scenario(1:i)//".ESC"
       filename = eescfile
 
-      OPEN(atmrun,file=dir_esc//filename,status='UNKNOWN',err=999)
+      OPEN(ounit,file=dir_esc//filename,status='UNKNOWN',err=999)
 
-      WRITE(logfile,*) 'Writing EESC output file ',filename
-      WRITE(*,*)       'Writing EESC output file ',filename
+      WRITE(logfile,*) 'Writing EESC output file ',dir_esc//filename
+      WRITE(*,*)       'Writing EESC output file ',dir_esc//filename
 
-      WRITE(atmrun,'(a)')"* EESC(ppt) from scenario "//scenario//" *"
-      WRITE(atmrun,'(a)')"* Year, total EESC, EESC per ODS ----->"
+      WRITE(ounit,'(a)')"* EESC(ppt) from scenario "//scenario//" *"
+      WRITE(ounit,'(a)')"* Year, total EESC, EESC per ODS ----->"
 
       DO iyr = 1,nyr
-        WRITE(atmrun,'(i4,21(1x,F8.2))')
+        WRITE(ounit,'(i4,21(1x,F8.2))')
      &               year(iyr),eesctot(iyr),ODS_data(1:nods)%EESC(iyr)
       ENDDO
 
-      WRITE(atmrun,'(a)')"* END *"
-      CLOSE(atmrun)
+      WRITE(ounit,'(a)')"* END *"
+      CLOSE(ounit)
 
 !----------------------------------------------------------------------!
 ! end of subroutine
 !----------------------------------------------------------------------!
+      !WRITE(*,*) " "
       RETURN
 
 ! error conditions
 999   PRINT*,"no such file : ",filename
-      stop
+      STOP
 
-      !END SUBROUTINE calc_EESC
-      END PROGRAM calc_EESC
+      END SUBROUTINE calc_EESC
 
 !=====================================================================
-      SUBROUTINE skip(iounit,eof)
-C=====================================================================
-C  Subroutine to skip comments while reading data files
-C  Positions file at next data record by skipping those comment
-C  records denoted by an asterisk in column 1.  The flag indicates
-C  when the end of file has been reached.
-C=====================================================================
-      IMPLICIT NONE
-
-! INCLUDING global.fi requires subroutine call with NO ARGUMENTS !
-!      INCLUDE 'global.fi'    
-
-      INTEGER iounit
-      LOGICAL eof     ! only if global.fi not invoked
-      CHARACTER*1 col1
-
-      eof = .false.
-
-100   READ(iounit,'(a1)',END=200) col1
-! DEBUG
-!      PRINT*,"skip:",col1
-! END DEBUG
-      IF (col1 .NE. '*') GOTO 300
-      GOTO 100
-
-200   eof = .true.
-
-300   BACKSPACE iounit
-
-      RETURN
-
-      END SUBROUTINE skip
 
 

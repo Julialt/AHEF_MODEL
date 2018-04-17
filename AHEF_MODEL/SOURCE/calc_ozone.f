@@ -1,5 +1,4 @@
-      !SUBROUTINE calc_ozone
-      PROGRAM calc_ozone
+      SUBROUTINE calc_ozone(scenario)
 !=====================================================================!
 ! PURPOSE: read EESC scenario and construct ozone distribution in 7
 !          latitude bands: {70-60,60-50,50-40,40-30,30-20,NH,global}
@@ -51,7 +50,8 @@
 ! internal variables
       INTEGER i,j,k,isp,imo,iyr,nyr,i1,i2
       REAL,DIMENSION(mlat) :: invals1
-      REAL,DIMENSION(mmo,mlat) :: afac,bfac
+      REAL,DIMENSION(mmo,mlat) :: afac
+      REAL :: bfac
       CHARACTER(10) adummy
       CHARACTER(20) bdummy
       CHARACTER(50) inpf, outf
@@ -70,39 +70,35 @@
 
 !----------------------------------------------------------------------!
 ! INPUT FILENAMES
-! "atmrunname" & "scenario" will eventually be passed in from AHEF.f
-
-      atmrunname = "ATM_RUN.BSL"
-
-      scenario = "WMO2010_BSL"
+! "scenario" is now passed in from ATMOS.f
+!      scenario = "WMO2010_BSL"
 
 !----------------------------------------------------------------------!
 ! READ INPUT DATA: EESC
+! col 1 = year; col 2 = total EESC; (optional: col 3+ = speciated EESC)
 
       i=INDEX(scenario," ")-1
       filename = scenario(1:i)//".ESC"
 
-      OPEN(atmrun,file=dir_esc//filename,status='OLD',err=999)
+      OPEN(iunit,file=dir_esc//filename,status='OLD',err=999)
 
-      WRITE(logfile,*) 'reading EESC file ',filename
-      WRITE(*,*)       'reading EESC file ',filename
+      WRITE(logfile,*) 'reading EESC file ',dir_esc//filename
+      WRITE(*,*)       'reading EESC file ',dir_esc//filename
 
-      CALL skip(atmrun,eof)
+      CALL skip(iunit,eof)
 
       iyr = 0
       DO WHILE (.NOT. eof)
         iyr = iyr + 1
 
-! col 1 = year; col 2 = total EESC; col 3+ = speciated EESC
-
-        READ(atmrun,*) year(iyr),eesc(iyr) !,ODS_data(1:nods)%EESC(iyr)
-        PRINT*, year(iyr),eesc(iyr)
+        READ(iunit,*) year(iyr),eesc(iyr) !,ODS_data(1:nods)%EESC(iyr)
+        !PRINT*, year(iyr),eesc(iyr)
 
 ! position file at next data line (ie not beginning with '*')
-        CALL skip (atmrun,eof)
+        CALL skip (iunit,eof)
 
       ENDDO ! WHILE (.NOT. EOF)
-      CLOSE(atmrun)
+      CLOSE(iunit)
 
 ! 'b' = diff EESC(scenario)(1990-1980) 
 
@@ -120,28 +116,30 @@
       ENDDO
 
       bfac = eesc(k)-eesc(j)
-      print*,bfac
 
 !----------------------------------------------------------------------!
 ! READ INPUT DATA: TOMS BASELINE (1980) = O3(1980) in equation below
 
       filename = "O3data_1980.TOMS"
 
-      OPEN(atmrun,file=dir_ozn//filename,status='OLD',err=999)
+      OPEN(iunit,file=dir_ozn//filename,status='OLD',err=999)
 
-      WRITE(logfile,*) 'reading TOMS baseline file ',filename
-      WRITE(*,*)       'reading TOMS baseline file ',filename
+      WRITE(logfile,*) 'reading TOMS baseline file ',dir_ozn//filename
+      WRITE(*,*)       'reading TOMS baseline file ',dir_ozn//filename
 
-      CALL skip(atmrun,eof)
+      CALL skip(iunit,eof)
 
       DO imo=1,mmo
-        READ(atmrun,*) i,invals1
+        READ(iunit,*) i,invals1
         IF(i.EQ.imo)THEN
           O3bsl(imo,1:mlat) = invals1(1:mlat)
         ELSE
           PRINT*,"error in file ",filename,": month not found ",imo
         ENDIF
+        CALL skip(iunit,eof)
       ENDDO
+
+      CLOSE(iunit)
 
 !----------------------------------------------------------------------!
 ! READ INPUT DATA: TOMS TREND, 1980-1990
@@ -149,22 +147,27 @@
 
       filename = "O3trend_1980-1990.TOMS"
 
-      OPEN(atmrun,file=dir_ozn//filename,status='OLD',err=999)
+      OPEN(iunit,file=dir_ozn//filename,status='OLD',err=999)
 
-      WRITE(logfile,*) 'reading TOMS trend file ',filename
-      WRITE(*,*)       'reading TOMS trend file ',filename
+      WRITE(logfile,*) 'reading TOMS trend file ',dir_ozn//filename
+      WRITE(*,*)       'reading TOMS trend file ',dir_ozn//filename
 
-      CALL skip(atmrun,eof)
+      CALL skip(iunit,eof)
 
       DO imo=1,mmo
-        READ(atmrun,*) i,invals1
+        READ(iunit,*) i,invals1
         IF(i.EQ.imo)THEN
           afac(imo,:) = invals1(:)
         ELSE
           PRINT*,"error in file ",filename,": month not found ",imo
+          STOP
         ENDIF
       ENDDO
 
+      CLOSE(iunit)
+
+      !print*,"afac = ",afac
+      !print*,"bfac = ",bfac
 !----------------------------------------------------------------------!
 ! CALCULATE O3 REGRESSION BASED ON EESC
 ! WMO(2011): O3(iyr) = O3(1980)+a/b*(EESC(iyr)-EESC(1980))
@@ -174,7 +177,7 @@
       DO iyr = 1,nyr
         DO imo = 1,mmo
           O3(iyr,imo,1:mlat) = O3bsl(imo,1:mlat) 
-     &                       + afac(imo,1:mlat)/bfac(imo,1:mlat)
+     &                       + afac(imo,1:mlat)/bfac
      &                       * (eesc(iyr)-eesc(j))
         ENDDO
        ENDDO
@@ -186,32 +189,32 @@
       i=INDEX(scenario," ")-1
       filename = scenario(1:i)//".OZN"
 
-      OPEN(atmrun,file=dir_ozn//filename,status='UNKNOWN',err=999)
+      OPEN(ounit,file=dir_ozn//filename,status='UNKNOWN',err=999)
 
-      WRITE(logfile,*) 'writing OZONE output file ',filename
-      WRITE(*,*)       'writing OZONE output file ',filename
+      WRITE(logfile,*) 'writing OZONE output file ',dir_ozn//filename
+      WRITE(*,*)       'writing OZONE output file ',dir_ozn//filename
 
 ! write to the file
-      WRITE(atmrun,'(a)') "*  DOBSON(year,month,latitude)"
-      WRITE(atmrun,'(a)') "*  --"
-      WRITE(atmrun,'(a)') "* number of latitude bands:"
-      WRITE(atmrun,'(1x,i2,1x,a1,5x,'//cmlat//'(2x,a6))') 
+      WRITE(ounit,'(a)') "*  DOBSON(year,month,latitude)"
+      WRITE(ounit,'(a)') "*  --"
+      WRITE(ounit,'(a)') "* number of latitude bands:"
+      WRITE(ounit,'(1x,i2,1x,a1,5x,'//cmlat//'(2x,a6))') 
      &                 mlat,':',(latband(i),i=1,mlat)
-      WRITE(atmrun,'(a)') "*  --"
-      WRITE(atmrun,'(1x,a8,'//cmlat//'(4x,i3,1x))') 
+      WRITE(ounit,'(a)') "*  --"
+      WRITE(ounit,'(1x,a8,'//cmlat//'(4x,i3,1x))') 
      &                "lat_hi = ",(lat1(i),i=1,mlat)
-      WRITE(atmrun,'(1x,a8,'//cmlat//'(4x,i3,1x))') 
+      WRITE(ounit,'(1x,a8,'//cmlat//'(4x,i3,1x))') 
      &                "lat_lo = ",(lat2(i),i=1,mlat)
-      WRITE(atmrun,'(a)') "* Yr:  Mo: "
+      WRITE(ounit,'(a)') "* Yr:  Mo: "
 
       DO iyr = 1,nyr
         DO imo = 1,mmo
-          WRITE(atmrun,'(1x,i4,2x,a3,'//cmlat//'(2x,f6.2))') 
+          WRITE(ounit,'(1x,i4,2x,a3,'//cmlat//'(2x,f6.2))') 
      &          year(iyr),month(imo),O3(iyr,imo,:)
         ENDDO
       ENDDO
 
-      CLOSE(logfile)
+      CLOSE(ounit)
 
 !----------------------------------------------------------------------!
 ! end of program
@@ -222,41 +225,9 @@
       stop
 
 
-      !END SUBROUTINE calc_ozone
-      END PROGRAM calc_ozone
+      END SUBROUTINE calc_ozone
+      !END PROGRAM calc_ozone
 
 !=====================================================================
-      SUBROUTINE skip(iounit,eof)
-C=====================================================================
-C  Subroutine to skip comments while reading data files
-C  Positions file at next data record by skipping those comment
-C  records denoted by an asterisk in column 1.  The flag indicates
-C  when the end of file has been reached.
-C=====================================================================
-      IMPLICIT NONE
-
-! INCLUDING global.fi requires subroutine call with NO ARGUMENTS !
-!      INCLUDE 'global.fi'    
-
-      INTEGER iounit
-      LOGICAL eof     ! only if global.fi not invoked
-      CHARACTER*1 col1
-
-      eof = .false.
-
-100   READ(iounit,'(a1)',END=200) col1
-! DEBUG
-!      PRINT*,"skip:",col1
-! END DEBUG
-      IF (col1 .NE. '*') GOTO 300
-      GOTO 100
-
-200   eof = .true.
-
-300   BACKSPACE iounit
-
-      RETURN
-
-      END SUBROUTINE skip
 
 

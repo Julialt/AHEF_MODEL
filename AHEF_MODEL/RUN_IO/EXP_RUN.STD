@@ -12,8 +12,8 @@
 *   Name           *.IRR        Lo    Hi        *.WGT      drtype
 *  >========<    >========<    >==<  >==<     >========<   >====<
     MELANOMA      SCUP-H        01    12       MELANOMA     CMYR
-    NMSC          SCUP-H        01    12       NMSC         CMYR
-    CATARACT      CATA-H        01    12       CATARACT     CMYR
+*    NMSC          SCUP-H        01    12       NMSC         CMYR
+*    CATARACT      CATA-H        01    12       CATARACT     CMYR
 *  >========<    >========<    >==<  >==<     >========<   >====<
 *
 *========================================================================

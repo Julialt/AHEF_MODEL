@@ -1,17 +1,26 @@
 C=====================================================================
       PROGRAM AHEF
 C=====================================================================
-C  Atmospheric and Health Effects Framework          File: AHEF.f
+C  Atmospheric and Health Effects Framework      
 C  A tool for estimating the impact of emissions of ozone-depleting
 C  chemicals on human health and the environment.
 C
 C  This framework has three major components:
-C     1. Atmospheric model:  ODS emis -> Ozone depletion    : AHEF.f
+C     1. Atmospheric model:  ODS emis -> Ozone depletion    : ATMOS.f
+C                    calls:  calc_EESC.f
+C                            calc_ozone.f
 C     2. Exposure model   :  Ozone depletion -> UV exposure : exposure.f
+C                    calls:  read_lookup.f (action spectrum-wt irradiance)
+C                            read_ozone.f
+C                            calc_irradiance.f
+C                            calc_exposure_by_age.f
 C     3. Effects model    :  UV Exposure -> Health effects  : effects.f
+C                    calls:  read_population.f
+C                            read_exposure_age.f
+C                            write_(various).f
 C
 C=====================================================================
-C PURPOSE OF THIS PROGRAM UNIT:
+C PURPOSE OF THIS PROGRAM UNIT:    File: AHEF.f
 C     - read run file AHEF.RUN
 C     - extract names of input files
 C     - extract flags for simulation type

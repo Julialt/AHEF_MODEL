@@ -1,0 +1,13 @@
+TO RUN ATMOS PROGRAM
+(including calc_EESC and calc_ozone)
+
+>gfortran ATMOS.f calc_EESC.f calc_ozone.f utils.f
+>./a.out
+
+TO RUN AHEF PROGRAM
+(including exposure.f and effects.f)
+
+AHEF_MODEL/SOURCE>cd ../
+AHEF_MODEL>make AHEF
+AHEF_MODEL>cd SOURCE
+AHEF_MODEL/SOURCE>./AHEF
