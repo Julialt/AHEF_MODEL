@@ -4,9 +4,9 @@ C=====================================================================
 C   Read cohort risk file
 c=====================================================================
 
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
-      INCLUDE 'effects.fi'
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
+      INCLUDE 'effects.h'
 
       REAL value, lastvalue
       INTEGER yrlp, lastyear, year

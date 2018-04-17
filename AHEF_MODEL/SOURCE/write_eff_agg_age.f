@@ -5,11 +5,9 @@ C  Subroutine to write effects output file - for the age routine
 C=====================================================================
       IMPLICIT NONE
 
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
-c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
-      INCLUDE 'effects.fi'
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
+      INCLUDE 'effects.h'
 
       LOGICAL first
       CHARACTER*8 indexname

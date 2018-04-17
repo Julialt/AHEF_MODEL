@@ -4,9 +4,9 @@ C=====================================================================
 C   Read age file
 c=====================================================================
 
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
-      INCLUDE 'effects.fi'
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
+      INCLUDE 'effects.h'
 
       INTEGER agelp, lastage, age
 !--------------------------------------------------

@@ -18,8 +18,8 @@
 !--------------------------------------------------------
       IMPLICIT NONE
 
-      INCLUDE 'global.fi'
-      INCLUDE 'files.fi'
+      INCLUDE 'global.h'
+      INCLUDE 'files.h'
       INCLUDE 'setup.h'
   
       INTEGER,PARAMETER :: mlat=7  ! # of latitude bands 

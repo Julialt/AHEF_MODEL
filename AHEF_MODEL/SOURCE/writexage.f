@@ -4,13 +4,10 @@ C=====================================================================
 C  Subroutine to write exposure output file
 C=====================================================================
       IMPLICIT NONE
-C$DEBUG: 'D'
 
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
-c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
-      INCLUDE 'exposure.fi'
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
+      INCLUDE 'exposure.h'
       INCLUDE 'setup.h'
 
 !---------------------------------------------------------------

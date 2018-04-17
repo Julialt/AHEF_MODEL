@@ -45,11 +45,8 @@ C   Error 140:    Age coefficient file not found
 C
 C=====================================================================
 
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
-c       INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
-
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
 
       INTEGER number
 
@@ -155,7 +152,7 @@ C=====================================================================
 C     Exponential Interpolation function
 C=====================================================================
 
-      INCLUDE 'files.fi'
+      INCLUDE 'files.h'
 
       REAL valu1,valu2,tmp1,tmp2
       INTEGER idx1,idx2,idx3
@@ -200,7 +197,7 @@ C=====================================================================
 C     Linear Interpolation function
 C=====================================================================
 
-      INCLUDE 'files.fi'
+      INCLUDE 'files.h'
 
       REAL valu1,valu2
       INTEGER idx1,idx2,idx3
@@ -227,11 +224,11 @@ C  when the end of file has been reached.
 C=====================================================================
       IMPLICIT NONE
 
-! INCLUDING global.fi requires subroutine call with NO ARGUMENTS !
-!      INCLUDE 'global.fi'    
+! INCLUDING global.h requires subroutine call with NO ARGUMENTS !
+!      INCLUDE 'global.h'    
 
       INTEGER iounit
-      LOGICAL eof     ! only if global.fi not invoked
+      LOGICAL eof     ! only if global.h not invoked
       CHARACTER*1 col1
 
       eof = .false.

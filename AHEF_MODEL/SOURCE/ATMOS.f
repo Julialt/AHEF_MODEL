@@ -34,7 +34,7 @@ C=====================================================================
       IMPLICIT NONE
 
       INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
+      INCLUDE 'global.h'
       INCLUDE 'setup.h'
 
       INTEGER i,j

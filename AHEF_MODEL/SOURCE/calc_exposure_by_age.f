@@ -6,11 +6,11 @@ C  by year.
 C=====================================================================
       IMPLICIT NONE
 
-      INCLUDE 'files.fi'
+      INCLUDE 'files.h'
 c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
-      INCLUDE 'global.fi'
-      INCLUDE 'exposure.fi'
+c     +countyAHEF\miniruns\run group 1\global.h'
+      INCLUDE 'global.h'
+      INCLUDE 'exposure.h'
 
       INTEGER agelo, agehi, eage
       INTEGER yrlplo, yrlphi, yrmult, temp

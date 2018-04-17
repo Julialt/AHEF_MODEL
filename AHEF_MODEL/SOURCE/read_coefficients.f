@@ -5,9 +5,9 @@ C   Read coefficients file
 C=====================================================================
       IMPLICIT NONE
 
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
-      INCLUDE 'effects.fi'
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
+      INCLUDE 'effects.h'
 
       INTEGER ilp
 !---------------------------------------------------

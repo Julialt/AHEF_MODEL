@@ -6,9 +6,9 @@ C   (i.e., irradiance by zenith angle and DObson units)
 C=====================================================================
       IMPLICIT NONE
 
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
-      INCLUDE 'exposure.fi'
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
+      INCLUDE 'exposure.h'
       INCLUDE 'setup.h'
 
       CHARACTER*12 filename

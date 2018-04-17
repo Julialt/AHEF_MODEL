@@ -95,8 +95,8 @@ C=====================================================================
 
       IMPLICIT NONE
 
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
       INCLUDE 'setup.h'
 
       INTEGER flagcount, modules

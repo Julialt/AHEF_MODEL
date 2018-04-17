@@ -43,7 +43,7 @@
 !--------------------------------------------------------
       IMPLICIT NONE
 
-      INCLUDE 'global.fi'
+      INCLUDE 'global.h'
       INCLUDE 'files.fi'
       INCLUDE 'setup.h'
   

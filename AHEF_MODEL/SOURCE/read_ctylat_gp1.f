@@ -3,17 +3,10 @@
 c  MRLM - to read in county file with state/coounty fip and the associated latitude
 c  at the county centroid location
 c18959\Desktop\AHEF_Runs_2014\
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
-      INCLUDE 'exposure.fi'
-c      INCLUDE 'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\run group r1\
-c     +source\files.fi'
-c      INCLUDE 'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\run group r1\
-c     +source\global.fi'
-c
-c      INCLUDE 'C:\Users\18959\Desktop\AHEF_Runs_2014\ahef\run group r1\
-c     +source\exposure.fi'
-c
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
+      INCLUDE 'exposure.h'
+
       INTEGER lat
 c
       OPEN(unit=67,file="cntyfip_g1.txt", status="old")

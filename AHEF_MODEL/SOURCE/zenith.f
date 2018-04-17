@@ -20,9 +20,8 @@ C
 C  OUTPUT:   ZEN    - Zenith angle (0-180)
 C=====================================================================
       IMPLICIT NONE
-!      IMPLICIT REAL*4 (a-h,o-z)
 
-      INCLUDE 'global.fi'
+      INCLUDE 'global.h'
 
 * INPUT DATA
       REAL lat

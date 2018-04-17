@@ -5,14 +5,10 @@ C  Subroutine to read exposure file
 C=====================================================================
       IMPLICIT NONE
 
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
-      INCLUDE 'effects.fi'
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
+      INCLUDE 'effects.h'
 
-c      INCLUDE 'C:\Documents and Settings\18959\Desktop\AHEF\
-c     +countyAHEF\miniruns\run group 1\global.fi'
-
-!      LOGICAL eof
       CHARACTER*8 indexname, indextmp
 
       WRITE (logfile, *) 'Reading Exposure'

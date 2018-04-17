@@ -5,9 +5,9 @@ C  Subroutine to read exposure by age file
 C=====================================================================
       IMPLICIT NONE
 
-      INCLUDE 'files.fi'
-      INCLUDE 'global.fi'
-      INCLUDE 'effects.fi'
+      INCLUDE 'files.h'
+      INCLUDE 'global.h'
+      INCLUDE 'effects.h'
 
       CHARACTER*8 indexname, indextmp
       CHARACTER*4 ayeartmp

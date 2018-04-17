@@ -11,8 +11,8 @@
 !--------------------------------------------------------
       IMPLICIT NONE
 
-      INCLUDE 'global.fi'
-      INCLUDE 'files.fi'
+      INCLUDE 'global.h'
+      INCLUDE 'files.h'
       INCLUDE 'setup.h'
   
 !-----------------------
