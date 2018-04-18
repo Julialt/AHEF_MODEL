@@ -9,13 +9,12 @@ C=====================================================================
       INCLUDE 'global.h'
       INCLUDE 'effects.h'
 
-      LOGICAL first
-      CHARACTER*8 indexname
-      REAL caseout(maxlats)
-      REAL caseoutb(maxlats)
-      REAL casesan(2100 + topage + 4 - 1887,maxlats,maxpops)
+      LOGICAL :: first
+      CHARACTER(len=8) :: indexname
+      REAL,DIMENSION(maxlats) :: caseout,caseoutbl
+      REAL,DIMENSION(2100+topage+4-1887,maxlats,maxpops) :: casesan
 
-      INTEGER iloop, idummy, iyri
+      INTEGER :: iloop, idummy, iyri
 !----------------------------------------------------------------
 
       IF (first) THEN

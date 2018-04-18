@@ -99,15 +99,12 @@ C=====================================================================
       INCLUDE 'global.h'
       INCLUDE 'setup.h'
 
-      INTEGER flagcount, modules
+      INTEGER :: flagcount, modules
 
-      CHARACTER*1 temp1,temp2,temp3,temp4
-      CHARACTER*3 emi_ext, ozn_ext, exp_ext, eff_ext
-      CHARACTER*3 atmrun_ext, exprun_ext, effrun_ext
-      CHARACTER*8 name, outname
-
-      DATA (monthname(i), i=1, 12) / 'Jan', 'Feb', 'Mar', 'Apr',
-     +      'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' /
+      CHARACTER(len=1) :: temp1,temp2,temp3,temp4
+      CHARACTER(len=3) :: emi_ext, ozn_ext, exp_ext, eff_ext
+      CHARACTER(len=3) :: atmrun_ext, exprun_ext, effrun_ext
+      CHARACTER(len=8) :: name, outname
 
 C=====================================================================
 C  Initialize flags
@@ -130,7 +127,7 @@ C=====================================================================
 
       OPEN(logfile,FILE=dir_io//'AHEF.LOG')
       OPEN(runfile,FILE=dir_in//'AHEF.RUN',status='OLD',ERR = 1010)
-      WRITE(*,*)"OPENINING runfile", dir_io//'AHEF.RUN'
+      WRITE(*,*)"OPENING runfile", dir_io//'AHEF.RUN'
 
       CALL skip( runfile, eof )
 

@@ -11,7 +11,7 @@ C===============================================================================
       INCLUDE 'exposure.h'
       INCLUDE 'setup.h'
 
-      CHARACTER*(*) filename
+      CHARACTER(len=*),INTENT(IN):: filename
 c
 c
       WRITE(logfile,*) "Reading ctyfip file ",filename

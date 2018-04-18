@@ -12,21 +12,18 @@ C=====================================================================
 
 c      mrlm day - make integer to match zenith routine!!!!
 c
-      REAL lat
-      REAL daily,czen
-      REAL dobunit
+      INTEGER :: r1,r2,c1,c2
 
-      INTEGER r1,r2,c1,c2
-      REAL    row,col,dcol,drow,temp1,temp2
-      REAL    lookup1,lookup2,dailyincr
+      REAL :: lat
+      REAL :: daily,czen
+      REAL :: dobunit
+      REAL :: row,col,dcol,drow,temp1,temp2
+      REAL :: lookup1,lookup2,dailyincr
 
 ! JMLT added 1 line
-      CHARACTER(30) ctyfip_file
+      CHARACTER(len=30) :: ctyfip_file
 
-c - printing out for input into VBA
-ccc--      REAL czenarr(17,12)
-c
-
+!---------------------------------------------------------------------
       yearlyirrad = 0                         ! initialize accumulator
 
       WRITE(logfile,*) 'Calculating Irradiance ...'

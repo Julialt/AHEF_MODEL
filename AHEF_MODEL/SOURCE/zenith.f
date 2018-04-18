@@ -24,18 +24,18 @@ C=====================================================================
       INCLUDE 'global.h'
 
 * INPUT DATA
-      REAL lat
+      REAL,INTENT(IN) :: lat
 
 * OUTPUT DATA
-      REAL zen
+      REAL,INTENT(OUT) :: zen
 
 * INTERNAL DATA:
-      INTEGER i,ijd
-      REAL lon,lbut,lzut,dr,rlt,d,tz,rdecl,eqr,eqh,zpt,time
+      INTEGER :: i,ijd
+      REAL :: lon,lbut,lzut,dr,rlt,d,tz,rdecl,eqr,eqh,zpt,time
 
-      INTEGER imn(12)
-      DATA imn/31,28,31,30,31,30,31,31,30,31,30,31/
-      REAL,PARAMETER:: pi=3.1415926535898
+      INTEGER,DIMENSION(12),PARAMETER :: imn =
+     &                 (/31,28,31,30,31,30,31,31,30,31,30,31/)
+      REAL,PARAMETER :: pi=3.1415926535898
 c
 !      WRITE(*,*) "zenith"
 

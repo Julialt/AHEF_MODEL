@@ -88,7 +88,6 @@
       i=INDEX(scenario_a," ")-1
       filename = dir_ems//scenario_a(1:i)//".EMI"
       OPEN(UNIT=ounit,FILE=filename,STATUS="UNKNOWN",ERR=999)
-      WRITE(logfile,*)'Writing COMBINED EMISSION data file ',filename
 
 ! write first lines of header
       WRITE(ounit,'(a)')"*Combined emissions file. Sources:"

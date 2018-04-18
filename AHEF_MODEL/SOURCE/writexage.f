@@ -11,10 +11,10 @@ C=====================================================================
       INCLUDE 'setup.h'
 
 !---------------------------------------------------------------
-      LOGICAL first
-      INTEGER iloop, idummy, iageymax
-      CHARACTER*8 indexname
-      CHARACTER*12 expfilename
+      LOGICAL :: first
+      INTEGER :: iloop, idummy, iageymax
+      CHARACTER(len=8) ::indexname
+      CHARACTER(len=12) :: expfilename
 
 !---------------------------------------------------------------
       IF (expblflag) THEN

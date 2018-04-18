@@ -10,23 +10,23 @@ C=====================================================================
       INCLUDE 'effects.h'
       INCLUDE 'setup.h'
 
-c mlrm
-      CHARACTER*5 ctypl ! for debugging
-c
-      CHARACTER(*) filename
-      CHARACTER tempchar
+      CHARACTER(len=*),INTENT(IN) :: filename
+
+      CHARACTER(len=5) :: ctypl ! mlrm: for debugging
+
 !      LOGICAL eof, expinterp, last
-      LOGICAL expinterp, last
-      INTEGER col, year, lastyear, yrlp
-      REAL totpop(minyear:maxyear), temp
-      REAL regbrk(minyear:maxyear, maxlats)
-      REAL popbrk(minyear:maxyear, 6)
-      REAL agebrk(minyear:maxyear, maxages, 6)
-c
-      REAL popt(minyear:maxyear, maxages, numcty, 6)
-      INTEGER ctyint
-      INTEGER ii
-      REAL einterp
+      LOGICAL :: expinterp, last
+
+      INTEGER :: col, year, lastyear, yrlp
+      INTEGER :: ii, ctyint
+
+      REAL :: temp, einterp
+      REAL,DIMENSION(minyear:maxyear) :: totpop
+      REAL,DIMENSION(minyear:maxyear,maxlats) :: regbrk
+      REAL,DIMENSION(minyear:maxyear,6) :: popbrk
+      REAL,DIMENSION(minyear:maxyear,maxages,6) :: agebrk
+      REAL,DIMENSION(minyear:maxyear,maxages,numcty,6) :: popt
+
 !-------------------------------------------------------------
 
       filename = filename(1:len_trim(filename))//'.pop'

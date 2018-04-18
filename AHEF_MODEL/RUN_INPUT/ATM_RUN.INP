@@ -1,7 +1,9 @@
 *========================================================================
-*  ATM_RUN.PTB
+*  ATM_RUN.INP
+*========================================================================
 *  Runfile for ozone maker model
 *  Lines beginning with '*' are comments
+*  Input lines are free-format, space-delimited.
 *========================================================================
 *--input data filenames: files should be in dir DATA_EMISSION
 *-------------------------------------

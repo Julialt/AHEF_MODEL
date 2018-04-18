@@ -9,7 +9,9 @@ C=====================================================================
       INCLUDE 'global.h'
       INCLUDE 'effects.h'
 
-      CHARACTER*8 indexname, indextmp
+      CHARACTER(len=*),INTENT(IN) :: indexname
+
+      CHARACTER(len=8) :: indextmp
 
       WRITE (logfile, *) 'Reading Exposure'
 

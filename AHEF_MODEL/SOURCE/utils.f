@@ -5,9 +5,9 @@ C  Subroutine to check IF we have reached the end of
 C  an input block
 C=====================================================================
 
-      INTEGER iounit
-      LOGICAL last
-      CHARACTER*1 col1
+      INTEGER :: iounit
+      LOGICAL :: last
+      CHARACTER(len=1) :: col1
 
       last = .false.
 
@@ -48,7 +48,7 @@ C=====================================================================
       INCLUDE 'files.h'
       INCLUDE 'global.h'
 
-      INTEGER number
+      INTEGER :: number
 
       errflag = .true.
 
@@ -154,8 +154,8 @@ C=====================================================================
 
       INCLUDE 'files.h'
 
-      REAL valu1,valu2,tmp1,tmp2
-      INTEGER idx1,idx2,idx3
+      REAL :: valu1,valu2,tmp1,tmp2
+      INTEGER :: idx1,idx2,idx3
 
       IF (valu1.NE.0) THEN
       tmp1 = log(valu1)
@@ -199,8 +199,8 @@ C=====================================================================
 
       INCLUDE 'files.h'
 
-      REAL valu1,valu2
-      INTEGER idx1,idx2,idx3
+      REAL :: valu1,valu2
+      INTEGER :: idx1,idx2,idx3
 
       IF (idx3 .NE. idx1) THEN
         xinterp = valu1 + (valu2-valu1) * (idx2-idx1+0.0)/(idx3-idx1)
@@ -215,6 +215,33 @@ C=====================================================================
 
 C=====================================================================
 C=====================================================================
+      SUBROUTINE readcharline(iounit,line,len)
+C=====================================================================
+C  Subroutine to read input file character data lines of unknown length 
+C  without compiler choking
+C=====================================================================
+      IMPLICIT NONE
+
+! INCLUDING global.h requires subroutine call with NO ARGUMENTS !
+!      INCLUDE 'global.h'    
+
+      INTEGER,INTENT(IN) :: iounit
+      INTEGER,INTENT(INOUT) :: len
+      CHARACTER(len=*),INTENT(OUT) :: line
+
+!      READ(iounit,'(Q,A)',END=200) len
+!      PRINT*,len
+  
+!      BACKSPACE(iounit)
+
+      READ(iounit,'(a)',END=200) line(1:len)
+      PRINT*,line
+
+200   RETURN
+  
+      END SUBROUTINE readcharline 
+C=====================================================================
+C=====================================================================
       SUBROUTINE skip(iounit,eof)
 C=====================================================================
 C  Subroutine to skip comments while reading data files
@@ -227,13 +254,15 @@ C=====================================================================
 ! INCLUDING global.h requires subroutine call with NO ARGUMENTS !
 !      INCLUDE 'global.h'    
 
-      INTEGER iounit
-      LOGICAL eof     ! only if global.h not invoked
-      CHARACTER*1 col1
+      INTEGER :: iounit
+      LOGICAL :: eof     ! only if global.h not invoked
+      CHARACTER(len=1) :: col1
 
       eof = .false.
 
 100   READ(iounit,'(a1)',END=200) col1
+!      PRINT*,col1
+
       IF (col1 .NE. '*') GOTO 300
       GOTO 100
 

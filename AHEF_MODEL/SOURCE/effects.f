@@ -15,58 +15,52 @@ C=====================================================================
       INCLUDE 'setup.h'
 !---------------------------------------------------------------
 
-      LOGICAL first, byyear, byage
-      INTEGER count,yrlplo,yrlphi,coh1,coh2,iy,iageg
-      INTEGER cohyrtmp,colotmp,cohitmp,ilattmp
-      INTEGER rlat
-      CHARACTER*12 age_pfn, cohort_pfn, coeff_pfn, popname
-      CHARACTER*3  baftype
-      CHARACTER*4  drtmp
-      CHARACTER*1  chrpops
-      CHARACTER*23  text
-      CHARACTER*23  tempchar
-      REAL coh_wght,tmp1,tmp2,wtd_incid, cmflag
-      REAL expwgt(maxages*step)
-      REAL expbase,expscen
-      INTEGER year,iageall
+      LOGICAL :: first, byyear, byage
+
+      INTEGER :: count,yrlplo,yrlphi,coh1,coh2,iy,iageg
+      INTEGER :: cohyrtmp,colotmp,cohitmp,ilattmp
+      INTEGER :: rlat
+      INTEGER :: year,iageall
+      INTEGER :: i,ii,icomp,ic,iwrite,itmp,imatch,imatch2,ictymatch,tmp
+      INTEGER :: nstate  ! total number of states for casest counter
+
       INTEGER,DIMENSION(maxpops) :: poptmp
-      INTEGER i,ii,icomp,ic,iwrite,itmp,imatch,imatch2,ictymatch,tmp
-c
-      REAL::  t1,t2,tca,tcb
 
-      REAL st_tot_base(15,maxpops)  ! by 15 state, 4 pop
-      REAL st_tot_scen(15,maxpops)
-      REAL st_tot_diff(15,maxpops)
-      REAL st_coh_scen(15,4,maxpops)
-      REAL st_coh_base(15,4,maxpops)
-      REAL st_coh_diff(15,4,maxpops)
-      REAL st_tot_b(15)  ! by 15 state, 4 pop
-      REAL st_tot_s(15)
-      REAL st_tot_d(15)
-c 
-!      REAL ct_tot_diff_l(numcty), ct_tot_diff_d(numcty)
-      REAL ct_tot_diff_l(maxcty), ct_tot_diff_d(maxcty)
-c
-      INTEGER group1(15)
-c      DATA group1 /1,5,12,22,28,29,40/
-      DATA group1 /9,10,11,23,24,25,33,34,36,39,42,44,50,51,54/
-      INTEGER ireg  ! total number of states for casest counter
+      REAL :: t1,t2,tca,tcb
+      REAL :: coh_wght,tmp1,tmp2,wtd_incid, cmflag
+      REAL :: expbase,expscen
 
-      CHARACTER(10) adummy
-      CHARACTER(20) bdummy
-      CHARACTER(8) endpttmp
-      CHARACTER(8) runname
-      CHARACTER(1) c1,c2,c3,c4,c5,c6,c7,c8
+      REAL,DIMENSION(maxcty) :: ctot_diff,ct_tot_diff_d
+!      REAL,DIMENSION(numcty) :: ctot_diff,ct_tot_diff_d
+      REAL,DIMENSION(maxages*step) :: expwgt
+
+      REAL,DIMENSION(maxstate) :: st_tot_b,   st_tot_s,   st_tot_d
+      REAL,DIMENSION(maxstate,maxpops) :: 
+     &                            st_tot_base,st_tot_scen,st_tot_diff
+      REAL,DIMENSION(maxstate,maxpops,maxpops) :: 
+     &                            st_coh_base,st_coh_scen,st_coh_diff
+
+      CHARACTER(len=1) :: chrpops
+      CHARACTER(len=1) :: c1,c2,c3,c4,c5,c6,c7,c8
+      CHARACTER(len=3) :: baftype
+      CHARACTER(len=4) :: drtmp
+      CHARACTER(len=8) :: endpttmp
+      CHARACTER(len=8) :: runname
+      CHARACTER(len=10) :: adummy
+      CHARACTER(len=12) :: age_pfn, cohort_pfn, coeff_pfn, popname
+      CHARACTER(len=20) :: bdummy
+      CHARACTER(len=23) :: text
+      CHARACTER(len=23) :: tempchar
+
 !---------------------------------------------------------------
 
       WRITE (*,*) 'Running effects model . . . .'
 
 ! INITIALIZE SOME QUANTITIES
 
-      ireg = 15
+      nstate = 15
       count = 1
       total = 0
-      numreg = 3
       first = .true.
 
       WRITE(chrpops,'(i1)')maxpops
@@ -269,11 +263,17 @@ C=====================================================================
 
 ! JMLT ! 
 ! Length of read-in field and # of leading blanks is unknown.
-! This format finds the end-of-line character so we can parse the input.
-        READ(iunit,'(Q,A)') i,bdummy
+! Method of read is compiler-dependent:
+! gfortran: can read lines shorter than declared with no problem
+        READ(iunit,*) adummy
+
+! pfg90: This format finds the end-of-line character so we can parse the input.
+!        READ(iunit,'(Q,A)') i,adummy
+!        adummy=ADJUSTL(bdummy(1:i-1))
+! end compiler-dependent section
+
         CALL skip (iunit,eof)
 
-        adummy=ADJUSTL(bdummy(1:i-1))
         i=INDEX(adummy," ")
         endpttmp(1:i-1) = adummy(1:i-1)
 
@@ -318,9 +318,14 @@ C=====================================================================
             popseg=" "
 
 ! read in string with unknown length, leading blanks
-            READ(iunit,'(Q,A)') i,bdummy
+! gfortran: can read lines shorter than declared with no problem
+            READ(iunit,*) bdummy
 
-            bdummy=ADJUSTL(bdummy(1:i-1))
+! pfg90: This format finds the end-of-line character so we can parse the input.
+!             READ(iunit,'(Q,A)') i,bdummy
+!             bdummy=ADJUSTL(bdummy(1:i-1))
+!
+! end compiler-dependent section
 
             i=INDEX(bdummy," ")
 
@@ -333,9 +338,14 @@ C=====================================================================
             WRITE(*,*) ilattmp
 
 ! read in string with unknown length, one integral blank
-            READ(iunit,'(Q,A)') i,bdummy
+! gfortran: can read lines shorter than declared with no problem
+              READ(iunit,*) bdummy
 
-            bdummy=ADJUSTL(bdummy(1:i-1))
+! pfg90: This format finds the end-of-line character so we can parse the input.
+!             READ(iunit,'(Q,A)') i,bdummy
+!             bdummy=ADJUSTL(bdummy(1:i-1))
+!
+! end compiler-dependent section
 
             i=INDEX(bdummy," ")
             ii=INDEX(bdummy(i+1:LEN(bdummy))," ")
@@ -673,7 +683,7 @@ c
 
           icomp = int(cty_fip(icty)/1000)
 c
-          DO ii = 1,ireg
+          DO ii = 1,nstate
             IF (icomp.EQ.group1(ii)) THEN
 c             icg1=icg1 + 1
 
@@ -701,7 +711,7 @@ c      WRITE(*,*)' summing up for state: total counties = ',icg1
 c             
       DO ipop=1,maxpops
          WRITE(ounit,*)'Population =',ipop
-         DO ii=1,ireg
+         DO ii=1,nstate
            WRITE(ounit,*)group1(ii),st_tot_base(ii,ipop),
      +                   st_tot_scen(ii,ipop),st_tot_diff(ii,ipop)
          ENDDO ! ii
@@ -712,7 +722,7 @@ c
 c sum for each state(/region) over all populations
 c           WRITE(ounit21,*)'Population =',ipop
 
-      DO ii=1,ireg
+      DO ii=1,nstate
         DO ipop=1,maxpops
             st_tot_b(ii) = st_tot_base(ii,ipop)+st_tot_b(ii)
             st_tot_s(ii) = st_tot_scen(ii,ipop)+st_tot_s(ii)
@@ -743,7 +753,7 @@ c
       WRITE(ounit, 700) 'Measure:   >',endpttmp,'<'
       WRITE(ounit, 700) 'D-RType:   >',drtmp,'<'
 c      
-      DO ii = 1,ireg
+      DO ii = 1,nstate
         DO ic = 1,4
           DO ipop = 1,maxpops
                  st_coh_scen(ii,ic,ipop)=0.0
@@ -756,7 +766,7 @@ c
 
           icomp = int(cty_fip(icty)/1000)
 
-          DO ii=1, ireg
+          DO ii=1, nstate
             IF (icomp.EQ.group1(ii)) THEN
 c              icg1=icg1 + 1
               DO icohort = colo,cohi
@@ -800,7 +810,7 @@ c
         DO ipop=1,maxpops   ! 4 population types
           WRITE(ounit31,*)'Population =',ipop
           WRITE(ounit31,*)'Cohort group = ',ic
-          DO ii=1,ireg
+          DO ii=1,nstate
             WRITE(ounit31,*)group1(ii),st_coh_base(ii,ic,ipop),
      +                                 st_coh_scen(ii,ic,ipop),
      &                                 st_coh_diff(ii,ic,ipop)
@@ -851,7 +861,7 @@ c
       DO icty=1, numcty
         icomp = int(cty_fip(icty)/1000)
 c
-        DO ii=1, ireg
+        DO ii=1, nstate
           IF (icomp.EQ.group1(ii)) THEN
 c
             DO icohort = colo,cohi

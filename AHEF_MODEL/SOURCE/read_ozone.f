@@ -10,13 +10,14 @@ C=====================================================================
       INCLUDE 'exposure.h'
       INCLUDE 'setup.h'
 
-      INTEGER i
+      CHARACTER(len=*),INTENT(IN) :: filename
+
+      INTEGER :: i
       REAL,DIMENSION(maxlats) :: dobtmp
 
-      CHARACTER*(*) filename
-      CHARACTER*52 Defaultfile
-      CHARACTER*1  cnlat
-      CHARACTER*3  adummy
+      CHARACTER(len=1) ::  cnlat
+      CHARACTER(len=3) ::  adummy
+      CHARACTER(len=52) :: Defaultfile
 !---------------------------------------------
 
       errflag = .false.

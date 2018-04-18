@@ -11,8 +11,9 @@ C=====================================================================
       INCLUDE 'exposure.h'
       INCLUDE 'setup.h'
 
-      CHARACTER*12 filename
-      INTEGER irow,icol,idummy
+      CHARACTER(len=*),INTENT(IN) :: filename
+
+      INTEGER :: irow,icol,idummy
 ! lrows & lcols are defined in file global.fi
 !-------------------------------------------------
 

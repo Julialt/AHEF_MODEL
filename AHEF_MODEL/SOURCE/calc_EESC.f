@@ -44,7 +44,7 @@
       IMPLICIT NONE
 
       INCLUDE 'global.h'
-      INCLUDE 'files.fi'
+      INCLUDE 'files.h'
       INCLUDE 'setup.h'
   
       INTEGER,PARAMETER :: nods=20 ! # of O3-Depleting Substances
@@ -54,7 +54,7 @@
 ! species_specific data and values
 
       TYPE :: species_data
-        CHARACTER(10) :: spnam ! ODS name
+        CHARACTER(len=10) :: spnam ! ODS name
         INTEGER :: ncl,nbr    ! readin: # Cl and Br
         REAL :: fclr,tau,wmol ! readin: frac Cl release, lifetime, molwt
         REAL :: xnbr,cf,ex1   ! equiv Cl release, kT/ppt, frac atm carryover
@@ -72,7 +72,7 @@
       REAL :: fsurf, fsurfCH3Br, alpha
 
 ! units of emissions
-      CHARACTER(10) :: units
+      CHARACTER(len=10) :: units
 
 ! output values
       INTEGER,DIMENSION(myr) :: year,pyr
@@ -108,7 +108,8 @@
 
       filename = dir_ods//odsfile
       OPEN(UNIT=iunit,FILE=filename,STATUS="OLD",ERR=999)
-      WRITE(*,*)'Reading ODS data file ',filename
+      WRITE(logfile,*)'Reading ODS data file ',filename
+      WRITE(*,*)      'Reading ODS data file ',filename
 
       CALL skip(iunit,eof)
 

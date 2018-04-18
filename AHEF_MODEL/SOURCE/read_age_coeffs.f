@@ -1,5 +1,5 @@
 C=====================================================================
-      SUBROUTINE READ_age_coeffs
+      SUBROUTINE read_age_coeffs
 C=====================================================================
 C   Read age file
 c=====================================================================
@@ -8,7 +8,7 @@ c=====================================================================
       INCLUDE 'global.h'
       INCLUDE 'effects.h'
 
-      INTEGER agelp, lastage, age
+      INTEGER :: agelp,lastage,age
 !--------------------------------------------------
 
       OPEN(iunit, file = agename, status = 'OLD', err = 1140)

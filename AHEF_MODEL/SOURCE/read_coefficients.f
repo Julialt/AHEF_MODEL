@@ -9,7 +9,7 @@ C=====================================================================
       INCLUDE 'global.h'
       INCLUDE 'effects.h'
 
-      INTEGER ilp
+      INTEGER :: i
 !---------------------------------------------------
 
       OPEN(iunit, file = coeffname, status = 'OLD', err = 1110)
@@ -18,8 +18,8 @@ C=====================================================================
       CALL skip( iunit, eof )
 
       DO ipop = 1, maxpops
-        READ( iunit, 100, END=1070 ) (coeff(ipop,ilp), ilp=1,5)
-        WRITE( logfile, 100 ) (coeff(ipop,ilp), ilp=1,5)
+        READ( iunit, 100, END=1070 ) (coeff(ipop,i), i=1,5)
+        WRITE( logfile, 100 ) (coeff(ipop,i), i=1,5)
 100     FORMAT(t15,f6.3,t25,100(f6.3,7x))
 
         CALL skip( iunit, eof )
@@ -30,6 +30,7 @@ C=====================================================================
 
 1070  CALL error(70,*999)
 1110  CALL error(110,*999)
+
       END SUBROUTINE read_coefficients
 
 

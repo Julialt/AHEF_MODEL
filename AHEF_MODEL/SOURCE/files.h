@@ -1,9 +1,9 @@
-C=====================================================================
-C     files.h
-C=====================================================================
-C  This file contains definitions of unit numbers for files used
-C  throughout the program.
-C=====================================================================
+!=====================================================================
+!     files.h
+!=====================================================================
+!  This file contains definitions of unit numbers for files used
+!  throughout the program.
+!=====================================================================
 
       INTEGER,PARAMETER :: runfile   = 10     ! global run file
       INTEGER,PARAMETER :: logfile   = 20     ! global log (error) file
@@ -23,8 +23,8 @@ C=====================================================================
       INTEGER,PARAMETER :: scratchbl  = 80     ! baseline exposure scratch file
       INTEGER,PARAMETER :: scratchage  = 71     ! exp by age file
       INTEGER,PARAMETER :: scratchagebl  = 81     ! exp by age bl file
-C=====================================================================
-C  Note: to avoid unit conflicts, do not use generic i/o units for
-C        operations that require the file to stay open.
-C=====================================================================
+!=====================================================================
+!  Note: to avoid unit conflicts, do not use generic i/o units for
+!        operations that require the file to stay open.
+!=====================================================================
 

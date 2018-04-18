@@ -19,12 +19,15 @@ c change all maxcty to numcty to save memory!
       CHARACTER*12 endpoint, indname
       CHARACTER*12 agename, cohortname, coeffname, popseg
 
-      INTEGER numreg, colo, cohi, colo_year, cohi_year
+      INTEGER colo, cohi, colo_year, cohi_year
       INTEGER poplo, pophi, outputlo, outputhi
       INTEGER popmaxyr, popminyr, yrstep
 
       INTEGER,DIMENSION(numcty) :: cty
       INTEGER,DIMENSION(minyear:maxyear,maxages,numcty,maxpops) :: pop
+
+      INTEGER,DIMENSION(maxstate),PARAMETER :: group1 =
+     &           (/9,10,11,23,24,25,33,34,36,39,42,44,50,51,54/)
 
 C     REAL,DIMENSION(maxcohorts,maxages,maxlats) :: expos, exposbl
 C     REAL,DIMENSION(maxcohorts,maxages,maxlats,maxpops) :: incid,incid2

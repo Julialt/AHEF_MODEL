@@ -9,11 +9,13 @@ C=====================================================================
       INCLUDE 'global.h'
       INCLUDE 'effects.h'
 
-      CHARACTER*8 indexname, indextmp
-      CHARACTER*4 ayeartmp
+      CHARACTER(len=*),INTENT(IN) :: indexname
 
-      REAL exptmp (maxcohorts, topage+4, numcty)
-      INTEGER unit
+      CHARACTER(len=8) :: indextmp
+      CHARACTER(len=4) :: ayeartmp
+
+      INTEGER :: unit
+      REAL,DIMENSION(maxcohorts,topage+4,numcty) :: exptmp
 
 !--------------------------------------------
 

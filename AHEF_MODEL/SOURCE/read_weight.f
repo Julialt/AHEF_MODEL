@@ -9,18 +9,19 @@ C=====================================================================
       INCLUDE 'global.h'
       INCLUDE 'exposure.h'
 
-      CHARACTER*12 filename
-      INTEGER row, col, idummy
+      CHARACTER(len=*),INTENT(IN) :: filename
+
+      INTEGER :: row,col,idummy
 !---------------------------------------------------------
 
-      OPEN(iunit, file = filename,status = 'OLD', err = 1060)
+      OPEN(iunit,file=filename,status='OLD',err=1060)
       WRITE(logfile,*) 'Reading WEIGHTS ',filename
       WRITE(*,*)       'Reading WEIGHTS ',filename
 
       CALL skip( iunit, eof )
       DO row = 1, maxages
-        READ(iunit,100,err=1070) idummy,
-     +                           (weights(row,col), col=1, maxages)
+        READ(iunit,100,err=1070) 
+     &                     idummy,(weights(row,col), col=1, maxages)
         WRITE(logfile,100) idummy,(weights(row,col), col=1, maxages)
 100     FORMAT(i3,100(:,2x,f5.1))
       ENDDO

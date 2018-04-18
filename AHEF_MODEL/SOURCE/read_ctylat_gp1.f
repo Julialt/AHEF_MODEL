@@ -1,13 +1,13 @@
       SUBROUTINE read_ctylat_gp1
 
-c  MRLM - to read in county file with state/coounty fip and the associated latitude
+c  MRLM - to read in county file with state/county fip and the associated latitude
 c  at the county centroid location
 c18959\Desktop\AHEF_Runs_2014\
       INCLUDE 'files.h'
       INCLUDE 'global.h'
       INCLUDE 'exposure.h'
 
-      INTEGER lat
+      INTEGER :: lat
 c
       OPEN(unit=67,file="cntyfip_g1.txt", status="old")
 c

@@ -1,59 +1,59 @@
-C=====================================================================
+!=====================================================================
       PROGRAM ATMOS
-C=====================================================================
-C  Atmospheric and Health Effects Framework Model  
-C  A tool for estimating the impact of emissions of ozone-depleting
-C  chemicals on human health and the environment.
-C
-C  This framework has three major components:
-C     1. Atmospheric model:  ODS emis -> Ozone depletion    : ATMOS.f
-C                    calls:  calc_EESC.f
-C                            calc_ozone.f
-C     2. Exposure model   :  Ozone depletion -> UV exposure : exposure.f
-C                    calls:  read_lookup.f (action spectrum-wt irradiance)
-C                            read_ozone.f
-C                            calc_irradiance.f
-C                            calc_exposure_by_age.f
-C     3. Effects model    :  UV Exposure -> Health effects  : effects.f
-C                    calls:  read_population.f
-C                            read_exposure_age.f
-C                            write_(various).f
-C
-C=====================================================================
-C PURPOSE OF THIS PROGRAM UNIT: File: ATMOS.f
-C     - read run file ATMOS.RUN
-C     - extract names of input files
-C     - extract desired latitude range for calculation
-C     - pass file names to subroutines
-C
-C=====================================================================
-C NAMES USED IN THIS PROGRAM UNIT:
-C
-C=====================================================================
+!=====================================================================
+!  Atmospheric and Health Effects Framework Model  
+!  A tool for estimating the impact of emissions of ozone-depleting
+!  chemicals on human health and the environment.
+!
+!  This framework has three major components:
+!     1. Atmospheric model:  ODS emis -> Ozone depletion    : ATMOS.f
+!                    calls:  calc_EESC.f
+!                            calc_ozone.f
+!     2. Exposure model   :  Ozone depletion -> UV exposure : exposure.f
+!                    calls:  read_lookup.f (action spectrum-wt irradiance)
+!                            read_ozone.f
+!                            calc_irradiance.f
+!                            calc_exposure_by_age.f
+!     3. Effects model    :  UV Exposure -> Health effects  : effects.f
+!                    calls:  read_population.f
+!                            read_exposure_age.f
+!                            write_(various).f
+!
+!=====================================================================
+! PURPOSE OF THIS PROGRAM UNIT: File: ATMOS.f
+!     - read run file ATMOS.RUN
+!     - extract names of input files
+!     - extract desired latitude range for calculation
+!     - pass file names to subroutines
+!
+!=====================================================================
+! NAMES USED IN THIS PROGRAM UNIT:
+!
+!=====================================================================
 
       IMPLICIT NONE
 
-      INCLUDE 'files.fi'
+      INCLUDE 'files.h'
       INCLUDE 'global.h'
       INCLUDE 'setup.h'
 
-      INTEGER i,j
+      INTEGER :: i,j,len
 
       CHARACTER(len=50) :: filename,emisfile,odsfile,pertfile,line
       CHARACTER(len=20) :: scenario_a,scenario_b,scenario_d
       CHARACTER(len=4) :: key
       CHARACTER(len=3) :: atmrun_ext
 
-C=====================================================================
-C  Initialize 
-C=====================================================================
+!=====================================================================
+!  Initialize 
+!=====================================================================
       eof = .false.
       scenario_b = ""
       scenario_d = ""
 
-C=====================================================================
-C  Open global runfile and global default names and extensions
-C=====================================================================
+!=====================================================================
+!  Open global runfile and global default names and extensions
+!=====================================================================
 
 ! hardwire here: later will pass in from AHEF.f
       atmrun_ext = "INP"
@@ -66,14 +66,30 @@ C=====================================================================
       CALL skip(atmrun,eof)
 
 ! read ODS species data filename from ATMOS.RUN
-
+!---- with gfortran compiler
       READ(atmrun,'(a)',err=998) line
+
+!---- with pgf90 compiler
+! need "(Q,A)" syntax in pfg90 since compiler cannot deal with
+! readin lines shorter than declared length; CHARACTER(len=50)
+      !READ(atmrun,"(Q,A)") len !,line
+      !BACKSPACE(atmrun)
+      !READ(atmrun,'(a)',err=998) line(1:len)
+! OR !
+      !CALL readcharline(atmrun,line,len)
+!---- end compiler-dependent section --
+
       CALL skip(atmrun,eof)
+
+      PRINT*,line
 
       odsfile = ADJUSTL(line)
 
       WRITE(logfile,*)  "ODS data file = ",odsfile
-      !PRINT*,           "ODS data file = ",odsfile
+      WRITE(*,*)        "ODS data file = ",odsfile
+
+      WRITE(*,*)"testing"
+
 
 !------------------------------------------------------------
 ! read global baseline emissions data filename from ATMOS.RUN
@@ -82,20 +98,20 @@ C=====================================================================
 
       READ(atmrun,'(a50)',err=998) line
       CALL skip(atmrun,eof)
-      !PRINT*,line
+      PRINT*,line
 
       emisfile = ADJUSTL(line)
 
       WRITE(logfile,*)  "emissions file = ",emisfile
-      !PRINT*,           "emissions file = ",emisfile
+      PRINT*,           "emissions file = ",emisfile
 
       i=INDEX(emisfile,".")-1
       scenario_b(1:i)=emisfile(1:i)
 
       CALL calc_EESC(odsfile,emisfile,scenario_b)
 
-!      PRINT*,"returning from calc_EESC: baseline scenario = "
-!     &                                , scenario_b
+      PRINT*,"returning from calc_EESC: baseline scenario = "
+     &                                , scenario_b
 
 !------------------------------------------------------------
 ! read ATMOS.RUN for keyword 
@@ -125,7 +141,9 @@ C=====================================================================
 ! set string "scenario_a" based on global emissions filename
 
         emisfile = line(1:j)
-        !PRINT*,"emisfile = ",emisfile
+
+        WRITE(logfile,*)  "emissions file = ",emisfile
+        PRINT*,           "emissions file = ",emisfile
 
         j=INDEX(emisfile,".")-1
         scenario_a(1:j)=emisfile(1:j)
@@ -136,7 +154,10 @@ C=====================================================================
 ! and combine (add) baseline and perturbation files
 
         pertfile = line(1:j)
-        !PRINT*,"pertfile = ",pertfile
+        PRINT*,"pertfile = ",pertfile
+
+        WRITE(logfile,*)  "perturbation file = ",pertfile
+        PRINT*,           "perturbation file = ",pertfile
 
         i=INDEX(scenario_b," ")-1
         j=INDEX(pertfile,".")-1
@@ -161,22 +182,22 @@ C=====================================================================
 
       CALL calc_EESC(odsfile,emisfile,scenario_a)
 
-!      PRINT*,"returning from calc_EESC: alternate scenario = "
-!     &                                , scenario_a
+      PRINT*,"returning from calc_EESC: alternate scenario = "
+     &                                , scenario_a
 
 !------------------------------------------------------------
 ! calculate ozone for baseline scenario
 
       CALL calc_ozone(scenario_b)
 
-!      PRINT*,"returning from calc_ozone: ",scenario_b
+      PRINT*,"returning from calc_ozone: ",scenario_b
 
 !------------------------------------------------------------
 ! calculate ozone for alternate / augmented scenario
 
       CALL calc_ozone(scenario_a)
 
-!      PRINT*,"returning from calc_ozone: ",scenario_a
+      PRINT*,"returning from calc_ozone: ",scenario_a
 
 !------------------------------------------------------------
 ! END OF PROGRAM

@@ -12,9 +12,9 @@ c     +countyAHEF\miniruns\run group 1\global.h'
       INCLUDE 'global.h'
       INCLUDE 'exposure.h'
 
-      INTEGER agelo, agehi, eage
-      INTEGER yrlplo, yrlphi, yrmult, temp
-      REAL agewght, wght_denom, wght
+      INTEGER :: agelo, agehi, eage
+      INTEGER :: yrlplo, yrlphi, yrmult, temp
+      REAL :: agewght, wght_denom, wght
 
       WRITE(logfile,*) "Calculating exposure by age"
       WRITE(*,*) "Calculating exposure by age"

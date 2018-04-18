@@ -15,11 +15,14 @@ C=====================================================================
       INCLUDE 'setup.h'
 
 !---------------------------------------------------------------
-      INTEGER i
-      REAL row,col
-      CHARACTER*8  indexname
-      CHARACTER*12 lookupname, weightname
-      LOGICAL peakflag, first
+      LOGICAL :: peakflag,first
+
+      INTEGER :: i
+
+      REAL :: row,col
+
+      CHARACTER(len=8) ::  indexname
+      CHARACTER(len=12) :: lookupname, weightname
 
 !---------------------------------------------------------------
       WRITE (*,*) 'Running exposure model . . . .'

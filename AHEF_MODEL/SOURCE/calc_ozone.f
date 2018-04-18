@@ -11,7 +11,6 @@
 !
 ! mlat = total no. of latitude bands considered = 7 
 !        { 70-60,60-50,50-40,40-30,30-20,NH,global }
-! nati = # of columns of data in .ati files from vintaging model
 
 ! EESC = annual Effective Equivalent Stratospheric Chlorine release (pptv)
 
@@ -22,51 +21,49 @@
       INCLUDE 'files.h'
       INCLUDE 'setup.h'
   
-      INTEGER,PARAMETER :: mlat=7  ! # of latitude bands 
-      CHARACTER(1) :: cmlat="7"  ! # of latitude bands, string format
-
-      INTEGER,PARAMETER :: myr=300 ! max # of years considered
-      INTEGER,PARAMETER :: mmo=12  ! # of months in 1 year
-
-      INTEGER,PARAMETER :: nati=25  ! # data in vintaging model *ati file
-      INTEGER,PARAMETER :: nods=20  ! # data in vintaging model *ati file
-
 !-----------------------
 ! input argument
-      !CHARACTER(len=20),INTENT(IN) :: scenario
-      CHARACTER(len=20) :: scenario
+
+      CHARACTER(len=20),INTENT(IN) :: scenario
+
+!-----------------------
+! parameters: maybe move to an include file?
+
+      INTEGER,PARAMETER :: mlat=7  ! # of latitude bands 
+      CHARACTER(len=1) :: cmlat="7" ! # of latitude bands, string format
+
+      INTEGER,PARAMETER :: myr=300 ! max # of years considered
+      INTEGER,PARAMETER :: nods=20  ! # Ozone Depleting Substances considered
 
 !-----------------------
 ! readin variables
+
       INTEGER,DIMENSION(myr) :: year
       REAL,DIMENSION(myr) :: eesc ! EESC integrated over all species
       REAL,DIMENSION(mmo,mlat) :: O3bsl ! O3(DU) in 1980 in all lat bands
 
 !-----------------------
-! output variables
+! written output variables
+
       REAL,DIMENSION(myr,mmo,mlat) :: O3 ! output O3(DU) in all lat bands
 
 !-----------------------
 ! internal variables
-      INTEGER i,j,k,isp,imo,iyr,nyr,i1,i2
+
+      INTEGER :: i,j,k,isp,imo,iyr,nyr,i1,i2
       REAL,DIMENSION(mlat) :: invals1
       REAL,DIMENSION(mmo,mlat) :: afac
       REAL :: bfac
-      CHARACTER(10) adummy
-      CHARACTER(20) bdummy
-      CHARACTER(50) inpf, outf
+      CHARACTER(len=10) :: adummy
+      CHARACTER(len=20) :: bdummy
       CHARACTER(len=50) :: filename
 
-      CHARACTER(len=6),DIMENSION(mlat) :: latband =
-     &                (/"70:60N","60:50N","50:40N","40:30N","30:20N",
-     &                  "90N:EQ","Global"/)
+      CHARACTER(len=6),DIMENSION(mlat),PARAMETER :: latband =
+     &                (/"70:60N","60:50N","50:40N","40:30N",
+     &                  "30:20N","90N:EQ","Global"/)
 
-      INTEGER,DIMENSION(mlat) :: lat1 = (/70,60,50,40,30,90,90/)
-      INTEGER,DIMENSION(mlat) :: lat2 = (/60,50,40,30,20,0,-90/)
-
-      CHARACTER(len=3),DIMENSION(mmo) :: month =
-     &                (/"Jan","Feb","Mar","Apr","May","Jun",
-     &                  "Jul","Aug","Sep","Oct","Nov","Dec"/)
+      INTEGER,DIMENSION(mlat),PARAMETER :: lat1=(/70,60,50,40,30,90,90/)
+      INTEGER,DIMENSION(mlat),PARAMETER :: lat2=(/60,50,40,30,20,0,-90/)
 
 !----------------------------------------------------------------------!
 ! INPUT FILENAMES
@@ -82,7 +79,7 @@
 
       OPEN(iunit,file=dir_esc//filename,status='OLD',err=999)
 
-      WRITE(logfile,*) 'reading EESC file ',dir_esc//filename
+      WRITE(logfile,*) 'Reading EESC file ',dir_esc//filename
       WRITE(*,*)       'reading EESC file ',dir_esc//filename
 
       CALL skip(iunit,eof)
@@ -124,8 +121,8 @@
 
       OPEN(iunit,file=dir_ozn//filename,status='OLD',err=999)
 
-      WRITE(logfile,*) 'reading TOMS baseline file ',dir_ozn//filename
-      WRITE(*,*)       'reading TOMS baseline file ',dir_ozn//filename
+      WRITE(logfile,*) 'Reading TOMS baseline file ',dir_ozn//filename
+      WRITE(*,*)       'Reading TOMS baseline file ',dir_ozn//filename
 
       CALL skip(iunit,eof)
 
@@ -134,7 +131,7 @@
         IF(i.EQ.imo)THEN
           O3bsl(imo,1:mlat) = invals1(1:mlat)
         ELSE
-          PRINT*,"error in file ",filename,": month not found ",imo
+          PRINT*,"error in file ",filename,": monthname not found ",imo
         ENDIF
         CALL skip(iunit,eof)
       ENDDO
@@ -149,8 +146,8 @@
 
       OPEN(iunit,file=dir_ozn//filename,status='OLD',err=999)
 
-      WRITE(logfile,*) 'reading TOMS trend file ',dir_ozn//filename
-      WRITE(*,*)       'reading TOMS trend file ',dir_ozn//filename
+      WRITE(logfile,*) 'Reading TOMS trend file ',dir_ozn//filename
+      WRITE(*,*)       'Reading TOMS trend file ',dir_ozn//filename
 
       CALL skip(iunit,eof)
 
@@ -159,7 +156,7 @@
         IF(i.EQ.imo)THEN
           afac(imo,:) = invals1(:)
         ELSE
-          PRINT*,"error in file ",filename,": month not found ",imo
+          PRINT*,"error in file ",filename,": monthname not found ",imo
           STOP
         ENDIF
       ENDDO
@@ -191,7 +188,7 @@
 
       OPEN(ounit,file=dir_ozn//filename,status='UNKNOWN',err=999)
 
-      WRITE(logfile,*) 'writing OZONE output file ',dir_ozn//filename
+      WRITE(logfile,*) 'Writing OZONE output file ',dir_ozn//filename
       WRITE(*,*)       'writing OZONE output file ',dir_ozn//filename
 
 ! write to the file
@@ -210,7 +207,7 @@
       DO iyr = 1,nyr
         DO imo = 1,mmo
           WRITE(ounit,'(1x,i4,2x,a3,'//cmlat//'(2x,f6.2))') 
-     &          year(iyr),month(imo),O3(iyr,imo,:)
+     &          year(iyr),monthname(imo),O3(iyr,imo,:)
         ENDDO
       ENDDO
 
